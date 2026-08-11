@@ -1,2 +1,5 @@
 __pycache__/
 *.pyc
+
+# Third-party clone (community Blueprint seed analyzer); not ours to vendor
+seedtool/Blueprint/
