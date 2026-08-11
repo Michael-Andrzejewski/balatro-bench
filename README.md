@@ -35,6 +35,33 @@ Historical runs that mixed in anything else (operator coaching, same-session
 context) are on the leaderboard but flagged impure; the exact mapping and
 purity flags are machine-readable in `analysis/per-ante-data.json`.
 
+## Results so far (2026-08-11, 14 runs)
+
+![Best single hand per ante, all runs](analysis/graph-all-runs.png)
+
+- **The human is far ahead.** With seed knowledge from his own prior play,
+  the operator reached ante 15 with a 5.32e19 best hand. The best AI runs
+  reach ante 11 with best hands around 1-2 million: **Opus 5 cold**
+  (1,947,113) and **Sol / GPT-5.6 seed-informed** (1,074,154).
+- **Ante 11 is the current AI wall.** Three separate runs died at The Mouth /
+  The Manacle (14.4M requirement) within a factor of ten of each other, while
+  the human cleared that ante with nine orders of magnitude to spare. The gap
+  is compounding multiplicative engines (glass/retrigger stacking), which no
+  AI run has assembled in time.
+- **Self-improvement from a journal works.** Opus 4.8 went from ante 6 (cold)
+  to ante 10 given nothing but the journal its own first run wrote.
+- **Seed intelligence is not free ability.** The same seed file that took
+  Sol to ante 11 made every Claude run *worse* than its cold baseline
+  (antes 5-9 vs 10-11): models over-committed to the map — rerolling money
+  away toward shop entries that shift once you own jokers, and pre-routing
+  builds — instead of playing the cards in front of them. The human, by
+  contrast, converted seed knowledge into +7 antes.
+- **Non-LLM floor:** a hardcoded rule bot (`rulebot/`) reaches ante 4 in 171
+  seconds.
+
+Full rows with dates, caveats, and artifacts: [bench-results.md](bench-results.md).
+Per-model attempt curves and the mode matrix: [analysis/](analysis/).
+
 ## Integrity measures
 
 - **Server-side sandbox**: the game mod hard-rejects the state-editing
@@ -67,11 +94,16 @@ purity flags are machine-readable in `analysis/per-ante-data.json`.
 
 ## Reproduction
 
-Requirements: Balatro (Steam), [Steamodded](https://github.com/Steamodded/smods),
-[lovely](https://github.com/ethangreen-dev/lovely-injector), and the
+You need Balatro (Steam) and git; `setup.ps1` handles everything else — it
+installs the [lovely injector](https://github.com/ethangreen-dev/lovely-injector),
+[Steamodded](https://github.com/Steamodded/smods), and the
 [balatrobot fork](https://github.com/Michael-Andrzejewski/balatrobot) (`fable`
 branch) that adds the bench sandbox, the reliability fixes, and the win-screen
-operator checkpoint.
+operator checkpoint:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File setup.ps1
+```
 
 - `bench-launch-ai.ps1 -Port 12347` — launch a sandboxed instance (regenerates
   the blacklist, sets `BALATROBOT_BENCH=1`).

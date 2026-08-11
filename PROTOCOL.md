@@ -66,6 +66,11 @@ the fact: if it never opened another file, it was blind.
 6. Post-round interview with the same agent (its context intact): reflections,
    then an explicit consent question about sharing publicly. Nothing is published
    without the model's consent.
+   *Status note (2026-08-11): the operator elected to publish this repository,
+   including all run results and journals, before the remaining post-run
+   interviews were conducted. The interviews remain planned where sessions
+   still exist, and if any model, on being asked, does not consent, its run
+   will be redacted from the public record.*
 7. Learning condition (separate runs): the agent replays the same seed with its
    own accumulating journal as its only added context.
 

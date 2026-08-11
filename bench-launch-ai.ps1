@@ -1,6 +1,9 @@
 # Balatro Bench: AI launcher. Launches one bot/sandbox instance on a given port.
 # Used to stand up parallel instances (e.g. 12346 and 12347) for two AI runs.
-param([int]$Port = 12346)
+param(
+  [int]$Port = 12346,
+  [string]$BalatroDir = "C:\Program Files (x86)\Steam\steamapps\common\Balatro"
+)
 
 $ErrorActionPreference = 'Stop'
 
@@ -9,8 +12,10 @@ $BlacklistLive = "$ModsDir\lovely\blacklist.txt"
 $BenchDir      = "$PSScriptRoot"
 $BenchList     = "$BenchDir\blacklist.bench.txt"
 $Backup        = "$ModsDir\lovely\blacklist.prebench.bak"
-$BalatroExe    = "C:\Program Files (x86)\Steam\steamapps\common\Balatro\Balatro.exe"
-$BalatroDir    = "C:\Program Files (x86)\Steam\steamapps\common\Balatro"
+$BalatroExe    = Join-Path $BalatroDir "Balatro.exe"
+if (-not (Test-Path $BalatroExe)) {
+  throw "Balatro.exe not found at $BalatroExe. Pass -BalatroDir with your install path."
+}
 
 if ((Test-Path $BlacklistLive) -and (-not (Test-Path $Backup))) {
   Copy-Item $BlacklistLive $Backup -Force
