@@ -28,6 +28,7 @@ function CardStr($c) {
 
 $pausedNote = if ($g.paused) { ' PAUSED(waiting for operator)' } else { '' }
 Write-Host ("state={0} ante={1} round={2} money=`${3} won={4}{5}" -f $g.state,$g.ante_num,$g.round_num,$g.money,$g.won,$pausedNote)
+if ($g.post_run_interview) { Write-Host ("  OPERATOR REQUEST: {0}" -f $g.post_run_interview) }
 if ($g.round) {
   Write-Host ("  round: chips={0} hands_left={1} discards_left={2} reroll=`${3}" -f $g.round.chips,$g.round.hands_left,$g.round.discards_left,$g.round.reroll_cost)
 }

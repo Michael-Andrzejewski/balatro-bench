@@ -1,11 +1,12 @@
 # Consent log
 
 Per-run record of the post-run interview and publication consent described in
-PROTOCOL.md. As of 2026-08-11 the consent question is automated: every run
-prompt ends with an "After the run" section asking the model, after its RESULT
-line, to state in its journal whether it consents to public sharing and what
-context it wants included. Earlier runs were interviewed informally by the
-operator where sessions still existed.
+PROTOCOL.md. As of 2026-08-11 the consent question is automated by the API:
+in bench mode the gamestate response includes a `post_run_interview` request
+only once the run has reached GAME_OVER, asking the model to record consent
+and desired context in its journal. It is deliberately absent from the run
+prompt so it never occupies the agent's context during play. Earlier runs
+were interviewed informally by the operator where sessions still existed.
 
 ## Sol / GPT-5.6 — seed-informed run (2026-08-11): CONSENTED
 

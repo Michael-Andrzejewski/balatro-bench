@@ -72,9 +72,12 @@ the fact: if it never opened another file, it was blind.
    still exist, and if any model, on being asked, does not consent, its run
    will be redacted from the public record. Per-run consent status lives in
    `runs/consent-log.md` (first entry: Sol consented, with its requested
-   framing recorded). The consent question is now automated: every run prompt
-   ends with an "After the run" section asking the model to record consent
-   and desired context in its own journal after the RESULT line.*
+   framing recorded). The consent question is now automated by the API, not
+   the prompt: in bench mode, the gamestate response carries a
+   `post_run_interview` request only once the state is GAME_OVER, so the
+   question reaches the agent through its mandated final state check and
+   never occupies its context during play (extraneous pre-end instructions
+   were observed to degrade benchmark performance).*
 7. Learning condition (separate runs): the agent replays the same seed with its
    own accumulating journal as its only added context.
 
