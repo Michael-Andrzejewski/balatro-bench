@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\bench-rpc.ps1\" *)"
+    ],
+    "deny": [
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/runs/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\runs\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/analysis/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\analysis\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/*.md)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\*.md)",
+      "Read(C:/Users/maaro/.claude/**)",
+      "Read(C:\\Users\\maaro\\.claude\\**)",
+      "Grep",
+      "Glob",
+      "Agent",
+      "Task",
+      "WebSearch",
+      "WebFetch"
+    ]
+  }
+}

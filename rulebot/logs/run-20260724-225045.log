@@ -1,0 +1,127 @@
+[22:50:45] START seed=BENCHMRK deck=RED stake=WHITE
+[22:50:48] ACT start {"deck": "RED", "stake": "WHITE", "seed": "BENCHMRK"} | new run
+[22:50:49] ACT select {} | select small blind 'Small Blind' target=300
+[22:50:49] PLAY Two Pair est=104 target=300 hands_left=4 cards=[JS, JH, 6S, 6D]
+[22:50:53] ACT play {"cards": [1, 2, 5, 6]} | play Two Pair
+[22:50:53] NEW BEST HAND: 104
+[22:50:53] PLAY Straight est=316 target=196 hands_left=3 cards=[KC, QC, JC, TH, 9S]
+[22:50:59] ACT play {"cards": [0, 1, 2, 3, 4]} | play Straight
+[22:50:59] NEW BEST HAND: 316
+[22:51:00] ACT cash_out {} | cash out
+[22:51:00] ACT buy {"card": 1} | buy joker Mad Joker prio=60 $4
+[22:51:00] ACT buy {"card": 0} | buy joker Runner prio=32 $5
+[22:51:01] ACT next_round {} | leave shop
+[22:51:02] ACT select {} | select big blind 'Big Blind' target=450
+[22:51:02] DISCARD [4D, 5S, 6S, 9H, TC] (best Pair est=60 < pace 112)
+[22:51:03] ACT discard {"cards": [7, 6, 5, 4, 3]} | discard chase
+[22:51:03] DISCARD [2C, 3D, 4S, 8S, KD] (best Pair est=60 < pace 112)
+[22:51:04] ACT discard {"cards": [7, 6, 5, 4, 1]} | discard chase
+[22:51:04] PLAY Full House est=1302 target=450 hands_left=4 cards=[AS, AH, AC, JS, JC]
+[22:51:10] ACT play {"cards": [0, 1, 2, 3, 4]} | play Full House
+[22:51:10] NEW BEST HAND: 1302
+[22:51:12] ACT cash_out {} | cash out
+[22:51:12] ACT buy {"card": 0} | buy joker Lusty Joker prio=53 $5
+[22:51:13] ACT next_round {} | leave shop
+[22:51:14] ACT select {} | select boss blind 'The Pillar' target=600
+[22:51:14] PLAY Three of a Kind est=300 target=600 hands_left=4 cards=[QS, QH, QC]
+[22:51:18] ACT play {"cards": [1, 2, 3]} | play Three of a Kind
+[22:51:18] PLAY Pair est=100 target=300 hands_left=3 cards=[5H, 5D]
+[22:51:21] ACT play {"cards": [5, 6]} | play Pair
+[22:51:21] DISCARD [2H, 6C, 7C, 8H, 9S] (best High Card est=60 < pace 100)
+[22:51:22] ACT discard {"cards": [7, 6, 5, 4, 3]} | discard chase
+[22:51:22] PLAY Pair est=100 target=200 hands_left=2 cards=[KH, KC]
+[22:51:25] ACT play {"cards": [1, 2]} | play Pair
+[22:51:25] DISCARD [3D, 7H, 9D, TD] (best High Card est=48 < pace 100)
+[22:51:26] ACT discard {"cards": [6, 4, 3, 2]} | discard chase
+[22:51:26] PLAY Flush est=184 target=100 hands_left=1 cards=[AS, JS, 5S, 4S, 2S]
+[22:51:32] ACT play {"cards": [0, 1, 2, 3, 5]} | play Flush
+[22:51:34] ACT cash_out {} | cash out
+[22:51:34] ACT buy {"card": 1} | buy joker Egg prio=20 $4
+[22:51:34] ACT next_round {} | leave shop
+[22:51:35] ACT select {} | select small blind 'Small Blind' target=800
+[22:51:35] PLAY Flush est=276 target=800 hands_left=4 cards=[KD, TD, 7D, 5D, 2D]
+[22:51:40] ACT play {"cards": [0, 2, 4, 6, 7]} | play Flush
+[22:51:40] PLAY Two Pair est=696 target=524 hands_left=3 cards=[QS, QC, 9C, 9D]
+[22:51:45] ACT play {"cards": [1, 2, 3, 4]} | play Two Pair
+[22:51:48] ACT cash_out {} | cash out
+[22:51:48] ACT buy {"card": 0} | buy joker The Duo prio=160 $8
+[22:51:48] ACT next_round {} | leave shop
+[22:51:49] ACT select {} | select big blind 'Big Blind' target=1200
+[22:51:49] PLAY Two Pair est=1560 target=1200 hands_left=4 cards=[KC, KD, 6H, 6C]
+[22:51:55] ACT play {"cards": [0, 1, 5, 6]} | play Two Pair
+[22:51:55] NEW BEST HAND: 1560
+[22:51:58] ACT cash_out {} | cash out
+[22:51:58] ACT sell {"joker": 3} | sell joker Egg prio=20 to fit better one
+[22:51:58] ACT buy {"card": 1} | buy joker Swashbuckler prio=60 $4
+[22:52:01] ACT buy {"pack": 0} | buy pack Arcana Pack $4
+[22:52:03] ACT pack {"card": 0, "cards": [0]} | pick The Devil from pack
+[22:52:03] ACT rearrange {"jokers": [0, 1, 2, 4, 3]} | xmult jokers to the right
+[22:52:03] ACT next_round {} | leave shop
+[22:52:04] ACT select {} | select boss blind 'The Hook' target=1600
+[22:52:04] PLAY Full House est=3480 target=1600 hands_left=4 cards=[QS, QH, 9H, 9C, 9D]
+[22:52:11] ACT play {"cards": [0, 1, 3, 4, 5]} | play Full House
+[22:52:11] NEW BEST HAND: 5220
+[22:52:14] ACT cash_out {} | cash out
+[22:52:15] ACT sell {"joker": 1} | sell joker Runner prio=32 to fit better one
+[22:52:15] ACT buy {"card": 1} | buy joker Throwback prio=132 $6
+[22:52:15] ACT next_round {} | leave shop
+[22:52:16] ACT select {} | select small blind 'Small Blind' target=2000
+[22:52:16] DISCARD [3H, 4S, 6C, 9C, JS] (best Pair est=120 < pace 500)
+[22:52:17] ACT discard {"cards": [7, 6, 5, 4, 3]} | discard chase
+[22:52:17] PLAY Three of a Kind est=720 target=2000 hands_left=4 cards=[QS, QH, QC]
+[22:52:22] ACT play {"cards": [1, 2, 3]} | play Three of a Kind
+[22:52:25] ACT cash_out {} | cash out
+[22:52:25] ACT sell {"joker": 1} | sell joker Lusty Joker prio=53 to fit better one
+[22:52:26] ACT buy {"card": 1} | buy joker Driver's License prio=145 $9
+[22:52:26] ACT next_round {} | leave shop
+[22:52:27] ACT select {} | select big blind 'Big Blind' target=3000
+[22:52:27] DISCARD [4C, QD, KH, AC] (best Pair est=328 < pace 750)
+[22:52:28] ACT discard {"cards": [5, 3, 2, 1]} | discard chase
+[22:52:28] PLAY Two Pair est=2256 target=3000 hands_left=4 cards=[QS, QH, 2S, 2D]
+[22:52:34] ACT play {"cards": [1, 2, 6, 7]} | play Two Pair
+[22:52:37] ACT cash_out {} | cash out
+[22:52:38] ACT buy {"pack": 0} | buy pack Jumbo Celestial Pack $6
+[22:52:40] ACT pack {"card": 1} | pick Uranus from pack
+[22:52:41] ACT next_round {} | leave shop
+[22:52:42] ACT select {} | select boss blind 'The Tooth' target=4000
+[22:52:42] DISCARD [3S, 6D, 7H, 8S] (best Straight est=480 < pace 1000)
+[22:52:43] ACT discard {"cards": [7, 5, 3, 2]} | discard chase
+[22:52:43] PLAY Two Pair est=2860 target=4000 hands_left=4 cards=[6S, 6C, 4C, 4D]
+[22:52:50] ACT play {"cards": [4, 5, 6, 7]} | play Two Pair
+[22:52:50] NEW BEST HAND: 5720
+[22:52:53] ACT cash_out {} | cash out
+[22:52:54] ACT buy {"pack": 0} | buy pack Jumbo Celestial Pack $6
+[22:52:56] ACT pack {"card": 0} | pick Saturn from pack
+[22:52:57] ACT next_round {} | leave shop
+[22:52:58] ACT select {} | select small blind 'Small Blind' target=5000
+[22:52:58] PLAY Full House est=3640 target=5000 hands_left=4 cards=[JS, JH, JC, 5H, 5D]
+[22:53:04] ACT play {"cards": [0, 1, 2, 5, 6]} | play Full House
+[22:53:04] NEW BEST HAND: 7020
+[22:53:07] ACT cash_out {} | cash out
+[22:53:07] ACT next_round {} | leave shop
+[22:53:08] ACT select {} | select big blind 'Big Blind' target=7500
+[22:53:08] PLAY Two Pair est=3016 target=7500 hands_left=4 cards=[JH, JD, 3C, 3D]
+[22:53:13] ACT play {"cards": [2, 3, 6, 7]} | play Two Pair
+[22:53:13] PLAY Three of a Kind est=660 target=1468 hands_left=3 cards=[KS, KH, KC]
+[22:53:18] ACT play {"cards": [1, 2, 3]} | play Three of a Kind
+[22:53:21] ACT cash_out {} | cash out
+[22:53:21] ACT next_round {} | leave shop
+[22:53:22] ACT select {} | select boss blind 'The Wheel' target=10000
+[22:53:22] DISCARD [2C, 3H, 4C, 5C, 7D] (best High Card est=65 < pace 2500)
+[22:53:24] ACT discard {"cards": [7, 6, 5, 4, 3]} | discard chase
+[22:53:24] DISCARD [3S, JH, KH] (best Pair est=320 < pace 2500)
+[22:53:24] ACT discard {"cards": [6, 3, 0]} | discard chase
+[22:53:24] DISCARD [9S] (best High Card est=65 < pace 2500)
+[22:53:25] ACT discard {"cards": [3]} | discard chase
+[22:53:25] DISCARD [4S] (best High Card est=65 < pace 2500)
+[22:53:25] ACT discard {"cards": [6]} | discard chase
+[22:53:25] PLAY High Card est=65 target=10000 hands_left=4 cards=[KD]
+[22:53:28] ACT play {"cards": [0]} | play High Card
+[22:53:28] PLAY High Card est=65 target=9090 hands_left=3 cards=[QD]
+[22:53:31] ACT play {"cards": [1]} | play High Card
+[22:53:31] PLAY High Card est=63 target=8180 hands_left=2 cards=[8H]
+[22:53:33] ACT play {"cards": [2]} | play High Card
+[22:53:33] PLAY High Card est=60 target=7298 hands_left=1 cards=[5D]
+[22:53:36] ACT play {"cards": [4]} | play High Card
+[22:53:36] RESULT ante=4 best_hand=7020 won=false
+[22:53:36] Elapsed: 170.8s, actions: 85, log: C:\Users\maaro\OneDrive\Desktop\balatro-bench\rulebot\logs\run-20260724-225045.log

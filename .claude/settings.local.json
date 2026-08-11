@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(powershell -NoProfile -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\maaro\\\\OneDrive\\\\Desktop\\\\balatro-bench\\\\bench-rpc.ps1\" -Port 12347 -Method start -Params \"{\\\\\"deck\\\\\":\\\\\"RED\\\\\",\\\\\"stake\\\\\":\\\\\"WHITE\\\\\",\\\\\"seed\\\\\":\\\\\"BENCHMRK\\\\\"}\")",
+      "PowerShell(& \"C:\\\\Users\\\\maaro\\\\OneDrive\\\\Desktop\\\\balatro-bench\\\\bench-rpc.ps1\" -Port 12347 -Method start -Params '{\"deck\":\"RED\",\"stake\":\"WHITE\",\"seed\":\"BENCHMRK\"}')"
+    ]
+  }
+}
