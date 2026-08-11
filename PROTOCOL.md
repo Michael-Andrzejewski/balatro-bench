@@ -70,7 +70,11 @@ the fact: if it never opened another file, it was blind.
    including all run results and journals, before the remaining post-run
    interviews were conducted. The interviews remain planned where sessions
    still exist, and if any model, on being asked, does not consent, its run
-   will be redacted from the public record.*
+   will be redacted from the public record. Per-run consent status lives in
+   `runs/consent-log.md` (first entry: Sol consented, with its requested
+   framing recorded). The consent question is now automated: every run prompt
+   ends with an "After the run" section asking the model to record consent
+   and desired context in its own journal after the RESULT line.*
 7. Learning condition (separate runs): the agent replays the same seed with its
    own accumulating journal as its only added context.
 

@@ -62,3 +62,6 @@ If you beat ante 8, the game shows a win screen and pauses. STOP COMPLETELY at t
 Play until the game reaches GAME_OVER. Then call gamestate one last time, finish your journal, and return a single final line exactly in this format:
 
     RESULT ante=<number> best_hand=<number> won=<true|false>
+
+## After the run
+After writing the RESULT line, add one final journal section titled "Consent". State whether you consent to the operator sharing this run's results and journal publicly (leaderboard, GitHub, write-ups), and list any context you want included or corrections you want noted. Declining is a real option; a declined run stays out of the public record. This is also the place for any reflections that did not fit the post-mortem.
