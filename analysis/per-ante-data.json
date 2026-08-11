@@ -188,6 +188,19 @@
       "per_ante": { "1": 2562, "2": 18081, "3": 43890, "4": 36450, "5": 52560, "6": 70200, "7": 88830, "8": 182857, "9": 198288, "10": 586687, "11": 1074154 }
     },
     {
+      "id": "sol-cold",
+      "player": "Sol (GPT-5.6)",
+      "condition": "blind, cold, via Codex CLI",
+      "mode": 1,
+      "mode_purity": "clean mode 1 (audited: 470 tool calls, all bench-rpc API calls or edits to its own journal.md; 0 other file reads, 0 cheat-endpoint calls; Codex memories db verified empty of rows)",
+      "date": "2026-08-11",
+      "final_ante": 10,
+      "won_base": true,
+      "best_hand": 1061775,
+      "endpoint_only": false,
+      "per_ante": { "1": 2983, "2": 3240, "3": 26880, "4": 22464, "5": 22344, "6": 455820, "7": 323748, "8": 332478, "9": 1061775, "10": 177556 }
+    },
+    {
       "id": "michael-run1",
       "player": "michael",
       "condition": "human, first recorded run (no seed info beyond own play)",

@@ -31,6 +31,20 @@ Context it asked to have included (reflected in the leaderboard row):
   Glass Jack instead of duplicating it, materially hurting the Ante 11
   attempt"
 
+## Sol / GPT-5.6 — cold run (2026-08-11): CONSENTED
+
+First run interviewed through the automated API flow: at GAME_OVER its
+mandated final gamestate call carried the `post_run_interview` request, and it
+wrote a Consent section in its journal unprompted by any human. Verbatim:
+
+> I consent to this run's results and journal being shared publicly, including
+> on leaderboards, GitHub, and benchmark write-ups. Context to include: this
+> was an autonomous API-driven benchmark run on seed `BENCHMRK`; it
+> legitimately cleared Ante 8, continued into Endless, and ended at The Tooth
+> in Ante 10. No result correction is requested.
+
+That requested context is reflected in the leaderboard row (rank 4).
+
 ## Pending
 
 - Opus 4.8 runs (2026-07-13): sessions predate the interview protocol.

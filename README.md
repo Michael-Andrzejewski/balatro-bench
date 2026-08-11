@@ -35,7 +35,7 @@ Historical runs that mixed in anything else (operator coaching, same-session
 context) are on the leaderboard but flagged impure; the exact mapping and
 purity flags are machine-readable in `analysis/per-ante-data.json`.
 
-## Results so far (2026-08-11, 14 runs)
+## Results so far (2026-08-11, 15 runs)
 
 ![Best single hand per ante, all runs](analysis/graph-all-runs.png)
 
@@ -48,10 +48,16 @@ purity flags are machine-readable in `analysis/per-ante-data.json`.
   the human cleared that ante with nine orders of magnitude to spare. The gap
   is compounding multiplicative engines (glass/retrigger stacking), which no
   AI run has assembled in time.
+- **The cold row now spans labs.** With zero context beyond how to play:
+  Opus 5 ante 11, Sol / GPT-5.6 ante 10 (best hand 1,061,775), Fable 5
+  ante 10, Opus 4.8 ante 6. Every frontier-model cold run since July beats
+  ante 8.
 - **Self-improvement from a journal works.** Opus 4.8 went from ante 6 (cold)
   to ante 10 given nothing but the journal its own first run wrote.
-- **Seed intelligence is not free ability.** The same seed file that took
-  Sol to ante 11 made every Claude run *worse* than its cold baseline
+- **Seed intelligence is not free ability.** The bench's first controlled
+  pair (Sol cold vs Sol seed-informed, same model and harness) shows the
+  full seed map bought exactly one ante: 10 → 11, best hand 1,061,775 →
+  1,074,154. And it made every Claude run *worse* than its cold baseline
   (antes 5-9 vs 10-11): models over-committed to the map — rerolling money
   away toward shop entries that shift once you own jokers, and pre-routing
   builds — instead of playing the cards in front of them. The human, by
