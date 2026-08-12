@@ -20,6 +20,15 @@ PLANNER_DIR = ARM_DIR / "planner"
 SESSION_FILE = PLANNER_DIR / "session-id.txt"
 LOG = ARM_DIR / "planner-dialogue.md"
 
+# The planner writes em-dashes, arrows and minus signs; a cp1252 Windows console
+# raises UnicodeEncodeError on print and the player loses a reply it can see in
+# the log. Never let display encoding drop a consultation.
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 
 def main():
     message = " ".join(sys.argv[1:]).strip()
