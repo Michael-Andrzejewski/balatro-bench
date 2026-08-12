@@ -20,25 +20,6 @@ PLANNER_DIR = ARM_DIR / "planner"
 SESSION_FILE = PLANNER_DIR / "session-id.txt"
 LOG = ARM_DIR / "planner-dialogue.md"
 
-# A planner reply that overruns the transport's output cap never arrives at all.
-# Fail fast and tell the player how to get an answer instead of stalling the run.
-TIMEOUT_SECONDS = 900
-RETRY_ADVICE = (
-    "Re-run this same consult command with the same message to retry.\n"
-    "If it fails again, the planner's reply is probably too long to deliver: send a\n"
-    "SHORTER, more tightly scoped question (one decision, not five) and explicitly ask\n"
-    "for a brief answer. Do not stall the run waiting on a consult that is not coming."
-)
-
-# The planner writes em-dashes, arrows and minus signs; a cp1252 Windows console
-# raises UnicodeEncodeError on print and the player loses a reply it can see in
-# the log. Never let display encoding drop a consultation.
-try:
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
-except Exception:
-    pass
-
 
 def main():
     message = " ".join(sys.argv[1:]).strip()
@@ -60,42 +41,32 @@ def main():
         payload = briefing + "\n\n=== FIRST PLAYER MESSAGE ===\n" + message
         cmd = ["cmd", "/c", "claude", "-p", "--model", model, "--output-format", "json"]
 
-    try:
-        proc = subprocess.run(
-            cmd,
-            cwd=str(PLANNER_DIR),
-            input=payload,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            timeout=TIMEOUT_SECONDS,
-        )
-    except subprocess.TimeoutExpired:
-        print(f"PLANNER TIMEOUT: no reply after {TIMEOUT_SECONDS // 60} minutes.")
-        print(RETRY_ADVICE)
-        sys.exit(1)
+    proc = subprocess.run(
+        cmd,
+        cwd=str(PLANNER_DIR),
+        input=payload,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
     if proc.returncode != 0:
         print("PLANNER CLI ERROR:", (proc.stderr or proc.stdout).strip()[:1500])
-        print(RETRY_ADVICE)
+        print("Re-run this same consult command with the same message to retry.")
         sys.exit(1)
 
     try:
         data = json.loads(proc.stdout)
     except json.JSONDecodeError:
         print("PLANNER OUTPUT PARSE ERROR:", proc.stdout.strip()[:1500])
-        print(RETRY_ADVICE)
+        print("Re-run this same consult command with the same message to retry.")
         sys.exit(1)
 
     if data.get("is_error"):
         print("PLANNER ERROR:", str(data.get("result", ""))[:1500])
-        print(RETRY_ADVICE)
+        print("Re-run this same consult command with the same message to retry.")
         sys.exit(1)
 
     reply = (data.get("result") or "").strip()
-    if not reply:
-        print("PLANNER RETURNED AN EMPTY REPLY (most likely the output cap).")
-        print(RETRY_ADVICE)
-        sys.exit(1)
     new_sid = data.get("session_id")
     if new_sid:
         SESSION_FILE.write_text(new_sid, encoding="utf-8")

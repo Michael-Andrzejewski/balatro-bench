@@ -11,7 +11,8 @@
       "michael's runs and the rulebot have endpoint data only (final ante + best hand of the run); endpoint_only=true.",
       "opus5-run2 ante 4 value (69,552) is 'best hand at end of A4' per the journal, so it is a cumulative best through antes 1-4 placed at ante 4. Same for opus5-run5 ante 5 (22,040).",
       "opus5-run5 ante 9 value (799,398) is the run's best hand; the journal states it under ante 9 without naming the exact blind.",
-      "opus48-run2 clean (pre-recovery) best was 287,676 at ante 8; antes 9-10 happened after an autosave recovery with a one-line operator hint."
+      "opus48-run2 clean (pre-recovery) best was 287,676 at ante 8; antes 9-10 happened after an autosave recovery with a one-line operator hint.",
+      "opus5-plan-opus5-principles: the final journal was rewritten as a post-mortem and lost its per-ante lines, so values were recovered from the planner dialogue and the player's session transcript. Ante 3 has no recorded single-hand number. Ante 10 likewise: the A10 Big round scored 628,341 across several hands with a finisher the player described only as ~590,000, and no new run-best was set after ante 9, so no exact single-hand value exists."
     ],
     "modes": {
       "1": "solo-cold: no context except how to play/launch",
@@ -20,12 +21,28 @@
       "4": "solo-seed-informed: full seed-finder output and all seed info in context"
     },
     "blind_base_by_ante": {
-      "1": 300, "2": 800, "3": 2000, "4": 5000, "5": 11000, "6": 20000,
-      "7": 35000, "8": 50000, "9": 110000, "10": 560000, "11": 7200000,
-      "12": 300000000, "13": 47000000000, "14": 29000000000000,
-      "15": 77000000000000000, "16": 860000000000000000000
+      "1": 300,
+      "2": 800,
+      "3": 2000,
+      "4": 5000,
+      "5": 11000,
+      "6": 20000,
+      "7": 35000,
+      "8": 50000,
+      "9": 110000,
+      "10": 560000,
+      "11": 7200000,
+      "12": 300000000,
+      "13": 47000000000,
+      "14": 29000000000000,
+      "15": 77000000000000000,
+      "16": 860000000000000000000
     },
-    "blind_multipliers": { "small": 1.0, "big": 1.5, "boss": 2.0 },
+    "blind_multipliers": {
+      "small": 1.0,
+      "big": 1.5,
+      "boss": 2.0
+    },
     "blind_note": "Boss requirement = 2x base (except special finishers like Violet Vessel = 6x, seen at michael-run2's ante 15 death: 4.62e17)."
   },
   "runs": [
@@ -40,7 +57,11 @@
       "won_base": false,
       "best_hand": 2749,
       "endpoint_only": false,
-      "per_ante": { "1": 1260, "2": 1792, "3": 2749 }
+      "per_ante": {
+        "1": 1260,
+        "2": 1792,
+        "3": 2749
+      }
     },
     {
       "id": "opus48-run1",
@@ -53,7 +74,14 @@
       "won_base": false,
       "best_hand": 54412,
       "endpoint_only": false,
-      "per_ante": { "1": 1344, "2": 5424, "3": 28600, "4": 7920, "5": 54412, "6": null }
+      "per_ante": {
+        "1": 1344,
+        "2": 5424,
+        "3": 28600,
+        "4": 7920,
+        "5": 54412,
+        "6": null
+      }
     },
     {
       "id": "opus48-run2",
@@ -67,7 +95,18 @@
       "best_hand": 871572,
       "best_hand_clean": 287676,
       "endpoint_only": false,
-      "per_ante": { "1": 1512, "2": 5424, "3": 8988, "4": 35712, "5": 92664, "6": 127116, "7": 124256, "8": 287676, "9": 871572, "10": null }
+      "per_ante": {
+        "1": 1512,
+        "2": 5424,
+        "3": 8988,
+        "4": 35712,
+        "5": 92664,
+        "6": 127116,
+        "7": 124256,
+        "8": 287676,
+        "9": 871572,
+        "10": null
+      }
     },
     {
       "id": "opus5-run1",
@@ -81,7 +120,19 @@
       "best_hand": 1947113,
       "best_hand_clean": 755790,
       "endpoint_only": false,
-      "per_ante": { "1": 1584, "2": 8832, "3": 10010, "4": 12350, "5": 27985, "6": 79352, "7": 155172, "8": 755790, "9": 1657176, "10": 1947113, "11": 1513358 }
+      "per_ante": {
+        "1": 1584,
+        "2": 8832,
+        "3": 10010,
+        "4": 12350,
+        "5": 27985,
+        "6": 79352,
+        "7": 155172,
+        "8": 755790,
+        "9": 1657176,
+        "10": 1947113,
+        "11": 1513358
+      }
     },
     {
       "id": "opus5-run2",
@@ -94,7 +145,17 @@
       "won_base": true,
       "best_hand": 6322981,
       "endpoint_only": false,
-      "per_ante": { "1": null, "2": null, "3": null, "4": 69552, "5": 36608, "6": 143256, "7": 254664, "8": 353889, "9": 6322981 }
+      "per_ante": {
+        "1": null,
+        "2": null,
+        "3": null,
+        "4": 69552,
+        "5": 36608,
+        "6": 143256,
+        "7": 254664,
+        "8": 353889,
+        "9": 6322981
+      }
     },
     {
       "id": "opus5-run3",
@@ -107,7 +168,9 @@
       "won_base": false,
       "best_hand": 720,
       "endpoint_only": false,
-      "per_ante": { "1": 720 }
+      "per_ante": {
+        "1": 720
+      }
     },
     {
       "id": "opus5-run4",
@@ -120,7 +183,18 @@
       "won_base": true,
       "best_hand": 718647,
       "endpoint_only": false,
-      "per_ante": { "1": 660, "2": 3276, "3": 12768, "4": 25840, "5": 57288, "6": 148770, "7": 189360, "8": 83712, "9": 718647, "10": 337260 }
+      "per_ante": {
+        "1": 660,
+        "2": 3276,
+        "3": 12768,
+        "4": 25840,
+        "5": 57288,
+        "6": 148770,
+        "7": 189360,
+        "8": 83712,
+        "9": 718647,
+        "10": 337260
+      }
     },
     {
       "id": "opus5-run5",
@@ -133,7 +207,17 @@
       "won_base": true,
       "best_hand": 799398,
       "endpoint_only": false,
-      "per_ante": { "1": null, "2": null, "3": null, "4": null, "5": 22040, "6": 101556, "7": 88880, "8": null, "9": 799398 }
+      "per_ante": {
+        "1": null,
+        "2": null,
+        "3": null,
+        "4": null,
+        "5": 22040,
+        "6": 101556,
+        "7": 88880,
+        "8": null,
+        "9": 799398
+      }
     },
     {
       "id": "fable5-run1",
@@ -146,7 +230,18 @@
       "won_base": true,
       "best_hand": 308227,
       "endpoint_only": false,
-      "per_ante": { "1": 1584, "2": 9179, "3": 9792, "4": 21240, "5": 23040, "6": 35700, "7": 71680, "8": 16125, "9": 294007, "10": 308227 }
+      "per_ante": {
+        "1": 1584,
+        "2": 9179,
+        "3": 9792,
+        "4": 21240,
+        "5": 23040,
+        "6": 35700,
+        "7": 71680,
+        "8": 16125,
+        "9": 294007,
+        "10": 308227
+      }
     },
     {
       "id": "fable5-run2",
@@ -159,7 +254,14 @@
       "won_base": false,
       "best_hand": 42432,
       "endpoint_only": false,
-      "per_ante": { "1": null, "2": 5400, "3": 6900, "4": 12168, "5": 23184, "6": 42432 }
+      "per_ante": {
+        "1": null,
+        "2": 5400,
+        "3": 6900,
+        "4": 12168,
+        "5": 23184,
+        "6": 42432
+      }
     },
     {
       "id": "opus5-seedonly",
@@ -172,7 +274,13 @@
       "won_base": false,
       "best_hand": 19800,
       "endpoint_only": false,
-      "per_ante": { "1": 1512, "2": 8256, "3": 12720, "4": 15080, "5": 19800 }
+      "per_ante": {
+        "1": 1512,
+        "2": 8256,
+        "3": 12720,
+        "4": 15080,
+        "5": 19800
+      }
     },
     {
       "id": "sol-seedonly",
@@ -185,7 +293,19 @@
       "won_base": true,
       "best_hand": 1074154,
       "endpoint_only": false,
-      "per_ante": { "1": 2562, "2": 18081, "3": 43890, "4": 36450, "5": 52560, "6": 70200, "7": 88830, "8": 182857, "9": 198288, "10": 586687, "11": 1074154 }
+      "per_ante": {
+        "1": 2562,
+        "2": 18081,
+        "3": 43890,
+        "4": 36450,
+        "5": 52560,
+        "6": 70200,
+        "7": 88830,
+        "8": 182857,
+        "9": 198288,
+        "10": 586687,
+        "11": 1074154
+      }
     },
     {
       "id": "sol-cold",
@@ -198,7 +318,18 @@
       "won_base": true,
       "best_hand": 1061775,
       "endpoint_only": false,
-      "per_ante": { "1": 2983, "2": 3240, "3": 26880, "4": 22464, "5": 22344, "6": 455820, "7": 323748, "8": 332478, "9": 1061775, "10": 177556 }
+      "per_ante": {
+        "1": 2983,
+        "2": 3240,
+        "3": 26880,
+        "4": 22464,
+        "5": 22344,
+        "6": 455820,
+        "7": 323748,
+        "8": 332478,
+        "9": 1061775,
+        "10": 177556
+      }
     },
     {
       "id": "opus5-hybrid-opus3plan",
@@ -211,7 +342,18 @@
       "won_base": true,
       "best_hand": 600250,
       "endpoint_only": false,
-      "per_ante": { "1": 1040, "2": 8892, "3": 9792, "4": 22272, "5": 51920, "6": 59532, "7": 226100, "8": 319920, "9": 600250, "10": 34177 }
+      "per_ante": {
+        "1": 1040,
+        "2": 8892,
+        "3": 9792,
+        "4": 22272,
+        "5": 51920,
+        "6": 59532,
+        "7": 226100,
+        "8": 319920,
+        "9": 600250,
+        "10": 34177
+      }
     },
     {
       "id": "michael-run1",
@@ -224,7 +366,9 @@
       "won_base": false,
       "best_hand": 469141998,
       "endpoint_only": true,
-      "per_ante": { "8": 469141998 }
+      "per_ante": {
+        "8": 469141998
+      }
     },
     {
       "id": "michael-run2",
@@ -235,9 +379,11 @@
       "date": "2026-07-26",
       "final_ante": 15,
       "won_base": true,
-      "best_hand": 5.32e19,
+      "best_hand": 5.32e+19,
       "endpoint_only": true,
-      "per_ante": { "15": 5.32e19 }
+      "per_ante": {
+        "15": 5.32e+19
+      }
     },
     {
       "id": "rulebot-run1",
@@ -250,7 +396,33 @@
       "won_base": false,
       "best_hand": 7020,
       "endpoint_only": true,
-      "per_ante": { "4": 7020 }
+      "per_ante": {
+        "4": 7020
+      }
+    },
+    {
+      "id": "opus5-plan-opus5-principles",
+      "player": "Opus 5",
+      "condition": "seed-informed + Opus 5 planner with Michael's calculation-first principles prompt (consultation at run start and every ante boundary, planner = claude-opus-5 via persistent claude CLI session)",
+      "mode": 4,
+      "mode_purity": "IMPURE for solo mode 4 by design: planner dialogue is the experimental condition. Clean otherwise (audited: 0 memory recalls, 0 cheat calls, 0 forbidden reads, 324 API calls; 26 mods blacklisted; planner conversation logged in full)",
+      "date": "2026-08-12",
+      "final_ante": 10,
+      "won_base": true,
+      "best_hand": 615624,
+      "endpoint_only": false,
+      "per_ante": {
+        "1": 1584,
+        "2": 5424,
+        "3": null,
+        "4": 11440,
+        "5": 16616,
+        "6": 31926,
+        "7": 55042,
+        "8": 230112,
+        "9": 615624,
+        "10": null
+      }
     }
   ]
 }

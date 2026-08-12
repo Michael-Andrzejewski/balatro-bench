@@ -1,0 +1,9 @@
+{
+  "staged": "2026-08-12",
+  "player": "claude-opus-5",
+  "planner": "claude-opus-5",
+  "planner_prompt": "principles",
+  "planner_transport": "cli",
+  "seed_info": true,
+  "arm": "opus5__plan-opus5-principles__seed"
+}

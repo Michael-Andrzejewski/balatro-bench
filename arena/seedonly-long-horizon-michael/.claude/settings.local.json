@@ -38,7 +38,9 @@
       "Agent",
       "Task",
       "WebSearch",
-      "WebFetch"
+      "WebFetch",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/opus5__plan-opus5-principles__seed/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\opus5__plan-opus5-principles__seed\\**)"
     ]
   }
 }

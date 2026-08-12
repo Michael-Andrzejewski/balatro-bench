@@ -69,6 +69,34 @@ cheerleading, deference to the domain expert, next-step focus, path of least
 resistance), gives the concrete consultation-9 challenge it should have made,
 and prescribes instructions for the next planner model in this seat.
 
+## Opus 5 player + Opus 5 planner (michael-principles hybrid), 2026-08-12
+
+Arena: `arena/opus5__plan-opus5-principles__seed`. The player wrote a Consent
+section into its own journal, unprompted, at the end of the run:
+
+> **I consent** to this run's results and this journal being shared publicly -
+> leaderboard, GitHub, write-ups, in full and unedited.
+
+It asked that four points travel with the result. That the headline numbers are
+highest ante 10, best single hand 615,624, reached in endless after winning the
+base game at ante 8. That the death was not a scoring-model failure, since its
+damage predictions matched the game to the chip all run, and the run ended on a
+resource-management decision (selling Mr. Bones) followed by two unlucky ~70%
+draws. That it played entirely through the documented HTTP API, never attempted
+`set`, `add` or `load`, and read no files outside its journal, the seed
+intelligence file and its own planner dialogue. And that the partnership was
+real and load-bearing, naming the planner's ante-6 Supernova call and ante-8
+Trio call as the two decisions that got the run past ante 7.
+
+It also filed a correction against its own earlier draft: an interim journal
+listed the ante-9 and ante-10 bosses from the seed analysis (The Fish, The
+Mark), which is wrong for an endless-mode run where bosses are re-randomized.
+The live bosses were The Plant and The Fish.
+
+The planner was not separately debriefed: it is the same model as the player,
+consulted through a CLI session rather than a distinct participant, and its
+full dialogue is published alongside the run.
+
 ## Pending
 
 - Opus 4.8 runs (2026-07-13): sessions predate the interview protocol.

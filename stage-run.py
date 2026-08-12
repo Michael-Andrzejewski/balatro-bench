@@ -255,6 +255,11 @@ ROLE_PROTOCOL = """
 - Never write AGREED unless you actually agree. The player is capped at 10 messages per consultation and will proceed without consensus after that; a real disagreement, held honestly, is a legitimate outcome.
 - Keep replies concrete: name specific jokers, vouchers, tags, antes, and numbers. No filler.
 
+## Length discipline (this has killed a run before)
+Your reply is delivered by a transport with a hard output cap. A reply that runs past it does not arrive truncated, it does not arrive at all: the player waits, gets nothing, and makes the decision alone. In one recorded run the planner's replies grew until four consecutive turns hit the cap, and the player made the run's most consequential call solo while believing a second opinion was coming.
+
+So: **answer in under 1,200 words.** Lead with the decision, then the arithmetic that justifies it, then stop. If the player asks five questions at once, answer all five briefly rather than any of them exhaustively. If a full treatment would exceed the budget, give the decision and the single most load-bearing number, and say what you left out so the player can ask a follow-up. A short answer that arrives beats a thorough one that does not.
+
 ## Continuity
 This one conversation persists for the entire run. Every earlier consultation stays in your context; track how the run is evolving against the plan, notice when reality diverges from your expectations, and update your advice as evidence comes in.
 
