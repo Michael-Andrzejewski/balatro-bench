@@ -1,7 +1,8 @@
-"""Stage a Balatro Bench run from explicit eval factors.
+"""Stage AND launch a Balatro Bench run from explicit eval factors.
 
 Every condition variable is a command-line flag; the script builds a fresh,
-isolated arena directory and prints the launch command(s).
+isolated arena directory, pre-flights the game, and starts the player in this
+terminal. One command runs the whole condition:
 
     python stage-run.py --player claude-opus-5 --planner claude-opus-5 \
         --planner-prompt principles --seed-info on
@@ -15,6 +16,13 @@ Factors:
   --planner-prompt <which>   general | principles | inspire
   --seed-info <on|off>       whether the BENCHMRK seed analysis is provided
   --name <optional>          override the auto-generated arm name
+  --stage-only               stage the arm and print commands, do not launch
+
+Pre-flight before launch: the game API on port 12347 must answer and be at
+MENU, and there must be no recoverable save.jkr that a `start` would clobber.
+Anything off prompts for confirmation instead of proceeding silently.
+Human-planner runs get their planner console opened in a separate window
+automatically before the player starts.
 
 The arm gets: prompt.txt, seed file (if on), consult transport (if planner),
 planner briefing, tool-denied planner subdir (CLI transport), sandbox settings
@@ -24,8 +32,10 @@ arm), and run-config.json recording the exact condition.
 import argparse
 import datetime
 import json
+import os
 import pathlib
 import shutil
+import subprocess
 import sys
 
 BENCH = pathlib.Path(__file__).resolve().parent
@@ -270,6 +280,40 @@ SEED_BLOCK = """
 ROLES = {"general": ROLE_GENERAL, "principles": ROLE_PRINCIPLES, "inspire": ROLE_INSPIRE}
 
 
+def confirm(question):
+    answer = input(f"{question} [y/N] ").strip().lower()
+    return answer in ("y", "yes")
+
+
+def game_check():
+    """Return (ok, detail). ok=True only if the game answers and sits at MENU."""
+    try:
+        proc = subprocess.run(
+            ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass",
+             "-File", str(BENCH / "bench-rpc.ps1"),
+             "-Port", "12347", "-Method", "gamestate", "-Params", "{}"],
+            capture_output=True, text=True, timeout=25)
+        out = ((proc.stdout or "") + (proc.stderr or "")).strip()
+    except Exception as e:
+        return False, f"gamestate check failed: {e}"
+    if not out or "refused" in out.lower() or "unable to connect" in out.lower():
+        return False, "game API on port 12347 is not answering (is the bench instance running?)"
+    if "MENU" in out:
+        return True, "game is at MENU"
+    first = out.splitlines()[0][:200]
+    return False, f"game is NOT at MENU; there may be a live run in progress. State: {first}"
+
+
+def saves_present():
+    # The bench instance plays on profile 1; profiles 2/3 are Michael's own
+    # and are never touched by a bench `start`.
+    appdata = os.environ.get("APPDATA", "")
+    if not appdata:
+        return []
+    save = pathlib.Path(appdata) / "Balatro" / "1" / "save.jkr"
+    return [save] if save.exists() else []
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--player", default="claude-opus-5")
@@ -278,6 +322,8 @@ def main():
     ap.add_argument("--planner-prompt", default="general", choices=list(ROLES))
     ap.add_argument("--seed-info", default="on", choices=["on", "off"])
     ap.add_argument("--name", default=None)
+    ap.add_argument("--stage-only", action="store_true",
+                    help="stage the arm and print commands without launching")
     a = ap.parse_args()
 
     seed_on = a.seed_info == "on"
@@ -406,17 +452,49 @@ def main():
         "arm": name,
     }, indent=2), encoding="utf-8")
 
-    # ---- launch commands
+    # ---- report the staged condition
     print(f"Staged: {arm}")
     print(f"Condition: player={a.player} planner={planner or 'none'}"
           + (f" planner_prompt={a.planner_prompt} transport={transport}" if planner else "")
           + f" seed_info={'on' if seed_on else 'off'}")
+
+    player_cmd = (f'powershell -NoProfile -Command'
+                  f' "claude --model {a.player} --permission-mode auto (Get-Content prompt.txt -Raw)"')
+
+    if a.stage_only:
+        if transport == "mailbox":
+            print("\nPlanner console (open FIRST, its own window):")
+            print(f'  cd /d "{arm}" && python planner-console.py')
+        print("\nPlayer launch (cmd):")
+        print(f'  cd /d "{arm}" && {player_cmd}')
+        return
+
+    # ---- pre-flight
+    print("\nPre-flight: checking the game instance on port 12347...")
+    ok, detail = game_check()
+    print(f"  {detail}")
+    if not ok:
+        print("  If the bench instance is not running, start it with bench-launch-ai.ps1 first.")
+        if not confirm("Launch the player anyway?"):
+            print("Aborted. Arm stays staged; re-run with --stage-only to just get the commands.")
+            return
+    saves = saves_present()
+    if saves:
+        print(f"  WARNING: recoverable save found ({saves[0]}). The player's `start` will overwrite it.")
+        if not confirm("Overwrite the existing save and launch?"):
+            print("Aborted. Arm stays staged.")
+            return
+
+    # ---- launch
     if transport == "mailbox":
-        print("\nPlanner console (open FIRST, its own window):")
-        print(f'  cd /d "{arm}" && python planner-console.py')
-    print("\nPlayer launch (cmd):")
-    print(f'  cd /d "{arm}" && powershell -NoProfile -Command'
-          f' "claude --model {a.player} --permission-mode auto (Get-Content prompt.txt -Raw)"')
+        print("Opening the planner console in its own window (you are the planner)...")
+        subprocess.Popen('start "planner-console" cmd /k python planner-console.py',
+                         shell=True, cwd=str(arm))
+    print(f"Launching player ({a.player}) in this terminal...\n")
+    sys.exit(subprocess.call(
+        ["powershell", "-NoProfile", "-Command",
+         f"claude --model {a.player} --permission-mode auto (Get-Content prompt.txt -Raw)"],
+        cwd=str(arm)))
 
 
 if __name__ == "__main__":

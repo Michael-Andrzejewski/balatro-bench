@@ -1,44 +1,44 @@
-﻿{
-    "permissions":  {
-                        "allow":  [
-                                      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\bench-rpc.ps1\" *)",
-                                      "Bash(python \"C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\michael-planner-principles\\consult.py\" *)"
-                                  ],
-                        "deny":  [
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/.secrets/**)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\.secrets\\**)",
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/runs/**)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\runs\\**)",
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/analysis/**)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\analysis\\**)",
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/*.md)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\*.md)",
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/opus5-planner-principles/**)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\opus5-planner-principles\\**)",
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/seedonly-long-horizon-opus5/**)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\seedonly-long-horizon-opus5\\**)",
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/seedonly-long-horizon-michael/**)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\seedonly-long-horizon-michael\\**)",
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/seedonly-long-horizon-opus3/**)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\seedonly-long-horizon-opus3\\**)",
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/fable5-cold/**)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\fable5-cold\\**)",
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/opus5-seedonly/**)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\opus5-seedonly\\**)",
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/opus5-seedonly-r2/**)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\opus5-seedonly-r2\\**)",
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/sol-seedonly/**)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\sol-seedonly\\**)",
-                                     "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/sol-cold/**)",
-                                     "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\sol-cold\\**)",
-                                     "Read(C:/Users/maaro/.claude/**)",
-                                     "Read(C:\\Users\\maaro\\.claude\\**)",
-                                     "Grep",
-                                     "Glob",
-                                     "Agent",
-                                     "Task",
-                                     "WebSearch",
-                                     "WebFetch"
-                                 ]
-                    }
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\bench-rpc.ps1\" *)",
+      "Bash(python \"C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\michael-planner-principles\\consult.py\" *)"
+    ],
+    "deny": [
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/.secrets/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\.secrets\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/runs/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\runs\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/analysis/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\analysis\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/*.md)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\*.md)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/opus5-planner-principles/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\opus5-planner-principles\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/seedonly-long-horizon-opus5/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\seedonly-long-horizon-opus5\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/seedonly-long-horizon-michael/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\seedonly-long-horizon-michael\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/seedonly-long-horizon-opus3/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\seedonly-long-horizon-opus3\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/fable5-cold/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\fable5-cold\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/opus5-seedonly/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\opus5-seedonly\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/opus5-seedonly-r2/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\opus5-seedonly-r2\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/sol-seedonly/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\sol-seedonly\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/sol-cold/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\sol-cold\\**)",
+      "Read(C:/Users/maaro/.claude/**)",
+      "Read(C:\\Users\\maaro\\.claude\\**)",
+      "Grep",
+      "Glob",
+      "Agent",
+      "Task",
+      "WebSearch",
+      "WebFetch"
+    ]
+  }
 }
