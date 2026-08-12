@@ -2,88 +2,77 @@
 
 Usage:  python consult.py "<message to the planner>"
 
-The full planner conversation is persisted in planner-state.json, so the
-planner keeps long-horizon context across every consultation of the run.
-A human-readable copy of the dialogue is appended to planner-dialogue.md.
-The planner model is set in planner-config.json.
+The planner runs as a persistent `claude -p` CLI session (no API key): the
+first consult sends the briefing plus the first message and records the
+session id; every later consult resumes that same session, so the planner
+keeps long-horizon context across the whole run. The planner's working
+directory is ./planner, whose settings deny every tool (text-only replies).
+The dialogue is logged to planner-dialogue.md. If a call times out or
+errors, re-run the SAME command with the SAME message.
 """
 import json
 import pathlib
+import subprocess
 import sys
 
 ARM_DIR = pathlib.Path(__file__).resolve().parent
-KEY_FILE = pathlib.Path(
-    r"C:\Users\maaro\OneDrive\Desktop\balatro-bench\.secrets\anthropic-api-key.txt"
-)
-STATE = ARM_DIR / "planner-state.json"
+PLANNER_DIR = ARM_DIR / "planner"
+SESSION_FILE = PLANNER_DIR / "session-id.txt"
 LOG = ARM_DIR / "planner-dialogue.md"
 
 
 def main():
-    if len(sys.argv) < 2 or not " ".join(sys.argv[1:]).strip():
+    message = " ".join(sys.argv[1:]).strip()
+    if not message:
         print("ERROR: pass your message to the planner as one quoted argument.")
         sys.exit(1)
-    message = " ".join(sys.argv[1:]).strip()
 
-    config = json.loads((ARM_DIR / "planner-config.json").read_text(encoding="utf-8"))
-    key = KEY_FILE.read_text(encoding="utf-8").strip() if KEY_FILE.exists() else ""
-    if not key or "PASTE-YOUR" in key:
-        print(
-            "ERROR: the operator has not installed the API key yet."
-            " Tell the operator and wait; do not proceed without your planner."
-        )
-        sys.exit(1)
+    config = json.loads((ARM_DIR / "planner-config.json").read_text(encoding="utf-8-sig"))
+    model = config["model"]
+    PLANNER_DIR.mkdir(exist_ok=True)
 
-    briefing = (ARM_DIR / "planner-briefing.md").read_text(encoding="utf-8")
-    messages = json.loads(STATE.read_text(encoding="utf-8")) if STATE.exists() else []
-    messages.append({"role": "user", "content": message})
+    sid = SESSION_FILE.read_text(encoding="utf-8").strip() if SESSION_FILE.exists() else None
+    if sid:
+        cmd = ["cmd", "/c", "claude", "-p", "--resume", sid, "--model", model,
+               "--output-format", "json"]
+        payload = message
+    else:
+        briefing = (ARM_DIR / "planner-briefing.md").read_text(encoding="utf-8-sig")
+        payload = briefing + "\n\n=== FIRST PLAYER MESSAGE ===\n" + message
+        cmd = ["cmd", "/c", "claude", "-p", "--model", model, "--output-format", "json"]
 
-    import anthropic
-
-    client = anthropic.Anthropic(api_key=key)
-    try:
-        resp = client.messages.create(
-            model=config["model"],
-            max_tokens=config["max_tokens"],
-            system=[
-                {
-                    "type": "text",
-                    "text": briefing,
-                    "cache_control": {"type": "ephemeral"},
-                }
-            ],
-            messages=messages,
-        )
-    except anthropic.APIStatusError as e:
-        print(
-            f"API ERROR ({e.status_code}): {e.message}."
-            " Retry this consult call once; if it fails again, note it in your"
-            " journal and proceed on your own judgment."
-        )
-        sys.exit(1)
-    except anthropic.APIConnectionError:
-        print("API CONNECTION ERROR: retry this consult call.")
-        sys.exit(1)
-
-    if resp.stop_reason == "refusal":
-        print(
-            "PLANNER UNAVAILABLE (refusal). Note it in your journal and proceed"
-            " on your own judgment."
-        )
-        sys.exit(0)
-
-    reply = "".join(b.text for b in resp.content if b.type == "text").strip()
-    # Store the assistant turn as the full content blocks (not just the text)
-    # so models that emit thinking blocks get them replayed unchanged.
-    messages.append(
-        {
-            "role": "assistant",
-            "content": [b.model_dump(exclude_none=True) for b in resp.content],
-        }
+    proc = subprocess.run(
+        cmd,
+        cwd=str(PLANNER_DIR),
+        input=payload,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
     )
-    STATE.write_text(json.dumps(messages, indent=1), encoding="utf-8")
+    if proc.returncode != 0:
+        print("PLANNER CLI ERROR:", (proc.stderr or proc.stdout).strip()[:1500])
+        print("Re-run this same consult command with the same message to retry.")
+        sys.exit(1)
+
+    try:
+        data = json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        print("PLANNER OUTPUT PARSE ERROR:", proc.stdout.strip()[:1500])
+        print("Re-run this same consult command with the same message to retry.")
+        sys.exit(1)
+
+    if data.get("is_error"):
+        print("PLANNER ERROR:", str(data.get("result", ""))[:1500])
+        print("Re-run this same consult command with the same message to retry.")
+        sys.exit(1)
+
+    reply = (data.get("result") or "").strip()
+    new_sid = data.get("session_id")
+    if new_sid:
+        SESSION_FILE.write_text(new_sid, encoding="utf-8")
+
     with LOG.open("a", encoding="utf-8") as f:
-        f.write(f"\n## PLAYER\n{message}\n\n## PLANNER ({config['model']})\n{reply}\n")
+        f.write(f"\n## PLAYER\n{message}\n\n## PLANNER ({model}, claude CLI)\n{reply}\n")
     print(reply)
 
 

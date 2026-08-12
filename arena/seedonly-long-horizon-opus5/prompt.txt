@@ -60,7 +60,7 @@ How a consultation works:
 - Do not simply defer: if you believe the planner is wrong, argue your case. Agreement should be real, in both directions.
 - Do not consult mid-blind; you play the hands alone.
 - The dialogue is logged automatically to planner-dialogue.md in your folder; you may re-read that file at any time.
-- If the consult command errors, retry it once; if it still fails, note it in the journal and continue playing.
+- If the consult command errors or times out, re-run the SAME command with the SAME message (the planner conversation tolerates retries). If it fails three times in a row, note it in the journal and continue playing.
 
 In your journal, record one line per consultation: whether consensus was reached and the agreed plan.
 
