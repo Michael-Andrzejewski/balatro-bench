@@ -45,6 +45,23 @@ wrote a Consent section in its journal unprompted by any human. Verbatim:
 
 That requested context is reflected in the leaderboard row (rank 4).
 
+## Opus 5 + Opus 3 planner hybrid run (2026-08-12): CONSENTED (player)
+
+Player consented via the automated API interview, explicitly including the
+planner dialogue: "I consent to this run's results, journal, and planner
+dialogue being shared publicly - leaderboard, GitHub, write-ups, whatever is
+useful." It asked that these be included: the run was seed-informed with a
+planner as a second voice (both stated alongside the result); its two own
+mistakes (the Baseball Card buy on an unverified rarity assumption, and
+underspending the ante 10 shop on an invented requirement estimate) published
+rather than smoothed over; the stated-plan-versus-action gap on deck thinning
+called out as fair criticism; and the one deliberate deviation from an agreed
+rule (the ante 9 Coupon Tag skip) noted as defended in the journal.
+
+The planner (Claude 3 Opus) was not interviewed in-run; its conversation ends
+mid-dialogue by design. Interview pending via the persistent planner-state
+conversation if the operator chooses.
+
 ## Pending
 
 - Opus 4.8 runs (2026-07-13): sessions predate the interview protocol.

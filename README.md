@@ -35,7 +35,7 @@ Historical runs that mixed in anything else (operator coaching, same-session
 context) are on the leaderboard but flagged impure; the exact mapping and
 purity flags are machine-readable in `analysis/per-ante-data.json`.
 
-## Results so far (2026-08-11, 15 runs)
+## Results so far (2026-08-12, 16 runs)
 
 ![Best single hand per ante, all runs](analysis/graph-all-runs.png)
 

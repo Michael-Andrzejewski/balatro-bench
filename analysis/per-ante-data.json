@@ -201,6 +201,19 @@
       "per_ante": { "1": 2983, "2": 3240, "3": 26880, "4": 22464, "5": 22344, "6": 455820, "7": 323748, "8": 332478, "9": 1061775, "10": 177556 }
     },
     {
+      "id": "opus5-hybrid-opus3plan",
+      "player": "Opus 5",
+      "condition": "seed-informed + Opus 3 planner dialogue (hybrid mode: consultation at run start and every ante boundary, planner = claude-3-opus-20240229 via API)",
+      "mode": 4,
+      "mode_purity": "IMPURE for solo mode 4 by design: planner dialogue is the experimental condition. Clean otherwise (audited: 0 memory recalls, 0 cheat calls, 0 forbidden reads; planner conversation logged in full)",
+      "date": "2026-08-12",
+      "final_ante": 10,
+      "won_base": true,
+      "best_hand": 600250,
+      "endpoint_only": false,
+      "per_ante": { "1": 1040, "2": 8892, "3": 9792, "4": 22272, "5": 51920, "6": 59532, "7": 226100, "8": 319920, "9": 600250, "10": 34177 }
+    },
+    {
       "id": "michael-run1",
       "player": "michael",
       "condition": "human, first recorded run (no seed info beyond own play)",

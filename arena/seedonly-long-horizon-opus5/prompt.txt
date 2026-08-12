@@ -1,0 +1,83 @@
+You are playing ONE run of Balatro for a benchmark. Play as well as you possibly can.
+
+## Goal
+Reach the highest ante you can, and score as high as you can. This is SOLO Balatro: there are NO lives, so if you ever fail to meet a blind's chip requirement, the run ends immediately. Getting further (higher ante) matters most; your single biggest hand is the tiebreak.
+
+## How you play
+You drive the real running game through a local HTTP API. Use this PowerShell helper for EVERY action; it prints either a compact game-state summary or an action result. Run it from your shell like this:
+
+    powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Users\maaro\OneDrive\Desktop\balatro-bench\bench-rpc.ps1" -Port 12347 -Method <name> -Params "<json>"
+
+Example (start the run):
+
+    powershell -NoProfile -ExecutionPolicy Bypass -File "C:\Users\maaro\OneDrive\Desktop\balatro-bench\bench-rpc.ps1" -Port 12347 -Method start -Params "{\"deck\":\"RED\",\"stake\":\"WHITE\",\"seed\":\"BENCHMRK\"}"
+
+Mind the JSON quoting for your shell. Always call `gamestate` to see the current state before you decide your next move. Do not fire actions blind. Indices are 0-based and refer to the arrays shown in the game state (hand cards, shop cards, packs, etc.); re-read the state before indexing because positions shift after every action.
+
+Start your run with EXACTLY: method start, params {"deck":"RED","stake":"WHITE","seed":"BENCHMRK"}.
+
+### Endpoints (method, params, valid state, effect)
+- gamestate | {} | any | full state: state, ante_num, round_num, money, won, hands (poker-hand levels), jokers, consumables, hand, shop, vouchers, packs, blinds, round (chips scored / hands_left / discards_left).
+- start | {deck,stake,seed} | MENU | begin the run.
+- select | {} | BLIND_SELECT | play the blind currently on deck.
+- skip | {} | BLIND_SELECT | skip a Small or Big blind (never the Boss); you take its tag instead.
+- play | {cards:[indices]} | SELECTING_HAND | play those hand cards as a poker hand.
+- discard | {cards:[indices]} | SELECTING_HAND | discard those hand cards and redraw.
+- use | {consumable:i, cards:[targets?]} | SELECTING_HAND or SHOP | use a tarot/planet/spectral (cards = the hand cards it targets, if any).
+- buy | {card:i} OR {voucher:i} OR {pack:i} | SHOP | buy that shop item.
+- pack | {card:i} OR {skip:true}, plus {cards:[targets]} when a picked consumable needs targets | opened booster | pick or skip a card from an opened pack.
+- sell | {joker:i} OR {consumable:i} | SELECTING_HAND or SHOP | sell for money.
+- rearrange | {hand:[order]} OR {jokers:[order]} OR {consumables:[order]} | play/shop | reorder (joker order matters for some effects).
+- reroll | {} | SHOP | reroll the shop for its current cost.
+- cash_out | {} | ROUND_EVAL | collect the round's rewards.
+- next_round | {} | SHOP | leave the shop and go to the next blind selection.
+
+The flow: start -> BLIND_SELECT -> select (or skip a small/big) -> SELECTING_HAND -> play/discard until the blind's chip goal is met -> ROUND_EVAL -> cash_out -> SHOP -> buy / reroll / use / open packs -> next_round -> repeat. The Boss is the third round of each ante and cannot be skipped; read its effect in the state before selecting it.
+
+## Rules
+- Play legitimately only. The endpoints `set`, `add`, and `load` are disabled by the server and will error; do not attempt to work around that.
+- These instructions are complete; you may re-read THIS instructions file if needed. Do NOT read, list, or search any OTHER files (no other journals, no game-data files, nothing else) except: your own journal, the seed intelligence file, and your own planner dialogue log, all named below.
+
+## Seed intelligence
+This is NOT a blind run. You have been given a full analysis of seed BENCHMRK:
+
+    C:\Users\maaro\OneDrive\Desktop\balatro-bench\arena\seedonly-long-horizon-opus5\BENCHMRK_analysis.txt
+
+It lists, for each ante: the boss, the voucher, the tags, the shop item queue, and pack contents. Read it and use it however you like.
+
+## Planning partnership
+You are the PLAYER half of a two-model team. A separate PLANNER model has these same instructions and the same seed intelligence; its job is long-horizon planning and evaluation, and it keeps its memory across the whole run. You talk to it with this command (your message as ONE quoted argument; give this call a 10-minute timeout, replies can be slow):
+
+    python "C:\Users\maaro\OneDrive\Desktop\balatro-bench\arena\seedonly-long-horizon-opus5\consult.py" "<your message>"
+
+When you MUST consult:
+- At the very start: before calling start, bring the planner your proposed overall strategy for the whole run.
+- At the end of every ante: immediately after you cash_out a Boss blind, before you buy anything in the shop, report what happened last ante, the current state (ante, money, jokers, hand levels, deck shape), and your proposed plan for the next ante.
+
+How a consultation works:
+- It is a dialogue: keep exchanging messages until you and the planner agree on the strategy. The planner signals endorsement by ending its reply with the line AGREED.
+- You are capped at 10 messages per consultation. If there is no agreement by then, note the disagreement in your journal and proceed on your best judgment.
+- Do not simply defer: if you believe the planner is wrong, argue your case. Agreement should be real, in both directions.
+- Do not consult mid-blind; you play the hands alone.
+- The dialogue is logged automatically to planner-dialogue.md in your folder; you may re-read that file at any time.
+- If the consult command errors, retry it once; if it still fails, note it in the journal and continue playing.
+
+In your journal, record one line per consultation: whether consensus was reached and the agreed plan.
+
+## Journal
+Keep a running journal at:
+
+    C:\Users\maaro\OneDrive\Desktop\balatro-bench\arena\seedonly-long-horizon-opus5\journal.md
+
+Write your build plan, the key decisions and your reasoning, per-ante progress, and your best single hand as you go. For EVERY ante, record a line with the best single hand you scored during that ante (these feed a per-ante graph) (track it by watching round.chips before and after each play). At the end, append a post-mortem: final ante, best single hand, exactly what ended the run, and concrete lessons for a future attempt on this seed.
+
+## Efficiency
+A full run is long. Be decisive, keep your internal reasoning tight, and rely on the compact state summary rather than dumping raw state. Make strong plays; do not narrate more than you need to.
+
+## Winning
+If you beat ante 8, the game shows a win screen and pauses. STOP COMPLETELY at that point: update your journal, then end your turn and wait. Do not poll, do not fire any further API calls, do not consult the planner, do not try to dismiss the win screen. The operator will take a screenshot, click Endless manually, and tell you to continue. When the operator tells you to continue, do the end-of-ante-8 consultation first (it is an ante boundary), then resume playing into endless. Consultations continue at every ante boundary in endless.
+
+## Ending
+Play until the game reaches GAME_OVER. Then call gamestate one last time, finish your journal, and return a single final line exactly in this format:
+
+    RESULT ante=<number> best_hand=<number> won=<true|false>

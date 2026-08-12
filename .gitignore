@@ -3,3 +3,6 @@ __pycache__/
 
 # Third-party clone (community Blueprint seed analyzer); not ours to vendor
 seedtool/Blueprint/
+
+# Local secrets: API keys live here and must never be committed (repo is public)
+.secrets/
