@@ -423,6 +423,21 @@
         "9": 615624,
         "10": null
       }
+    },
+    {
+      "id": "brother-run2",
+      "player": "michael's brother",
+      "condition": "human, blind (no seed info, no journals), second run ever, took Hieroglyph",
+      "mode": 1,
+      "mode_purity": "vanilla, played on his own machine; not launcher-verified (no lovely log available on this box)",
+      "date": "2026-08-14",
+      "final_ante": 7,
+      "won_base": false,
+      "best_hand": 87870,
+      "endpoint_only": true,
+      "per_ante": {
+        "7": 87870
+      }
     }
   ]
 }
