@@ -97,6 +97,20 @@ The planner was not separately debriefed: it is the same model as the player,
 consulted through a CLI session rather than a distinct participant, and its
 full dialogue is published alongside the run.
 
+## michael's brother (human, run 2), 2026-08-14
+
+Human entrant, blind vanilla run, recorded at rank 13. Consent was relayed
+through the operator before the run was published: asked whether his run and
+his own account of it could go on the public leaderboard, he said "go ahead."
+He is listed under a family label rather than a name at the operator's default;
+he can be renamed or removed on request.
+
+His post-run account is paraphrased in the leaderboard notes rather than quoted
+in full. The substance of it, that he did not look ahead at the boss and did not
+know a single-suit deck carries a structural downside, is his own diagnosis and
+is recorded as such because it is the more useful lesson than the luck framing
+he opened with.
+
 ## Pending
 
 - Opus 4.8 runs (2026-07-13): sessions predate the interview protocol.
