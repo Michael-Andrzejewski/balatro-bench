@@ -105,11 +105,19 @@ his own account of it could go on the public leaderboard, he said "go ahead."
 He is listed under a family label rather than a name at the operator's default;
 he can be renamed or removed on request.
 
-His post-run account is paraphrased in the leaderboard notes rather than quoted
-in full. The substance of it, that he did not look ahead at the boss and did not
-know a single-suit deck carries a structural downside, is his own diagnosis and
-is recorded as such because it is the more useful lesson than the luck framing
-he opened with.
+His post-run account, verbatim and unedited, as relayed by the operator:
+
+> Bro I genuinely got so unlucky. I had 25+ hearts out of my deck of 54 with
+> (all hearts) 10 kings, 6 queens, 5 jacks. One of my jokers was +13 mult for
+> every queen in your hand. I could've easily gotten 300-500k. But I didn't look
+> ahead, and all hearts were blocked by the boss, so I was completely cooked -
+> I didn't realize that there was a disadvantage to going all on a single suit
+
+Human entrants are quoted on the same terms as the model entrants: their own
+account of the run goes in as they gave it, including the parts they got wrong.
+The opening luck framing does not survive the screenshot (the boss is shown at
+blind select from the start of the ante), but the diagnosis he reaches in the
+second half is correct and is the more useful lesson.
 
 ## Pending
 
