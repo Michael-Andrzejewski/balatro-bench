@@ -12,7 +12,8 @@
       "opus5-run2 ante 4 value (69,552) is 'best hand at end of A4' per the journal, so it is a cumulative best through antes 1-4 placed at ante 4. Same for opus5-run5 ante 5 (22,040).",
       "opus5-run5 ante 9 value (799,398) is the run's best hand; the journal states it under ante 9 without naming the exact blind.",
       "opus48-run2 clean (pre-recovery) best was 287,676 at ante 8; antes 9-10 happened after an autosave recovery with a one-line operator hint.",
-      "opus5-plan-opus5-principles: the final journal was rewritten as a post-mortem and lost its per-ante lines, so values were recovered from the planner dialogue and the player's session transcript. Ante 3 has no recorded single-hand number. Ante 10 likewise: the A10 Big round scored 628,341 across several hands with a finisher the player described only as ~590,000, and no new run-best was set after ante 9, so no exact single-hand value exists."
+      "opus5-plan-opus5-principles: the final journal was rewritten as a post-mortem and lost its per-ante lines, so values were recovered from the planner dialogue and the player's session transcript. Ante 3 has no recorded single-hand number. Ante 10 likewise: the A10 Big round scored 628,341 across several hands with a finisher the player described only as ~590,000, and no new run-best was set after ante 9, so no exact single-hand value exists.",
+      "brother-run3 has no screenshot or journal (run closed before capture): final ante, best hand and build are from the operator's report, and the best hand is approximate (reported as 419k)."
     ],
     "modes": {
       "1": "solo-cold: no context except how to play/launch",
@@ -437,6 +438,22 @@
       "endpoint_only": true,
       "per_ante": {
         "7": 87870
+      }
+    },
+    {
+      "id": "brother-run3",
+      "player": "michael's brother",
+      "condition": "human, blind (no seed info, no journals), third run",
+      "mode": 1,
+      "mode_purity": "vanilla, played on his own machine; not launcher-verified",
+      "date": "2026-08-15",
+      "final_ante": 9,
+      "won_base": true,
+      "best_hand": 419000,
+      "best_hand_approx": true,
+      "endpoint_only": true,
+      "per_ante": {
+        "9": 419000
       }
     }
   ]
