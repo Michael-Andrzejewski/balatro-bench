@@ -60,8 +60,8 @@
 ### Ante 12
 - Shop 1: Jumbo Celestial (Uranus lvl 19), Arcana: The Hermit (+$20). Rerolls: the second Photograph at queue slot 10 was resampled to Chaos the Clown because owned jokers never reappear. Sold The Duo for Dusk (final-hand retrigger). Bought Justice at slot 14. $105.
 - Blinds 300M / 450M / boss THE WALL 1.2B. Every hand here needed the glass Red Seal Queen leading a two pair with a Justice-glassed partner, Dusk, and three or more Steels held (1.7B to 2.6B on paper), so I skipped both blinds (Throwback X4.5) and staked the ante on one round.
-- The Wall: 20 cards seen across four discards and three churn hands; the plain QD came, the glass one never did. Final hand QQTT with Justice on the QH leading, Holo Glass Ten as partner, Dusk active, one Steel held: 203,848,175 of 1,200,000,000. GAME OVER at ante 12, round 22, $106 unspent.
-- Best hand ante 12: 203,848,175.
+- The Wall: 20 cards seen across four discards and three churn hands; the plain QD came, the glass one never did. Final hand QQTT with Justice on the QH leading, Holo Glass Ten as partner, Dusk active, one Steel held: 220,982,175 of 1,200,000,000. GAME OVER at ante 12, round 22, $106 unspent.
+- Best hand ante 12: 220,982,175.
 
 ## Per-ante best hands
 - Ante 1: 1512
@@ -75,10 +75,10 @@
 - Ante 9: 158096
 - Ante 10: 675762
 - Ante 11: 46096128
-- Ante 12: 203848175
+- Ante 12: 220982175
 
 ## Post-mortem
-- Final ante: 12 (died on the ante 12 boss, The Wall, 1.2B). Won the base game at ante 8. Best single hand: 203,848,175. Screenshots: win-ante8.png, gameover-ante12.png.
+- Final ante: 12 (died on the ante 12 boss, The Wall, 1.2B). Won the base game at ante 8. Best single hand: 220,982,175. Screenshots: win-ante8.png, gameover-ante12.png.
 - What worked: Hanging Chad + Photograph from ante 4-5 on, which turns any face-led two pair into X8 and a glass face lead into X64 (X256 with the Red Seal Queen). Steel cards held (up to X3.375), Foil Driver's License switched on at ante 10, Throwback fed by eleven skips (X4.5 at the end), Two Pair to level 19 through Telescope celestials, Dusk at the end.
 - What killed it: one card. From ante 11 on, only the glass Red Seal Queen could clear a blind, and a 47-card deck with hand size 8 gives roughly a coin flip per round of drawing it. I skipped seven blinds from ante 9 on to reduce the number of gates, which bought antes but starved the shops. The second Photograph I was counting on (queue slot 10 at ante 12) cannot exist: owned jokers are resampled out of the shop.
 - What I would do differently on this seed: (1) Never spend the ante 1 reroll; the post-boss shop belongs to the next ante's queue. (2) Get Death copies of the glass Queen (Death appears at a8 slot 40, a10 slot 89, a11 slot 31 and in the a11 Jumbo Arcana) so there are two or three glass red-seal leads. (3) Thin the deck aggressively (Hanged Man, Immolate, Trading Card) so the lead shows up every round. (4) Take Turtle Bean or Juggler for hand size when the engine is steel-held mult. (5) Keep The Duo and find a sixth slot instead of trading it for Dusk; the Negative Tag at ante 11 never applied for me. (6) Chariot every time it shows: each steel is both a held X1.5 and a Driver's License count.
