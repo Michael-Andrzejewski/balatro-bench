@@ -129,3 +129,6 @@ second half is correct and is the more useful lesson.
 Per PROTOCOL.md: publication of this repository preceded these interviews by
 operator decision; any model that declines when asked will have its run
 redacted from the public record.
+
+## GPT-6-Astra, seed-informed, 2026-09-07
+Asked through the API's post_run_interview at GAME_OVER (the model returned its RESULT line first, so the operator resumed the session once more with the same request). Consented. Its requested context, verbatim: "Please include that this was a seed-informed run using the supplied BENCHMRK analysis, not a blind run. The session was interrupted repeatedly by usage limits and resumed from operator-restored game states. Ante 8 was completed before the operator enabled Endless. The final result was ante 13, best single hand 713536045056, won=true; the run ended at The Manacle in Endless. The journal's strategic explanations and post-mortem are retrospective judgments, not proof that the decisions were optimal." It also noted the consent covers its own output only, not permissions on behalf of people.

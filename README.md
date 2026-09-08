@@ -43,6 +43,7 @@ purity flags are machine-readable in `analysis/per-ante-data.json`.
   the operator reached ante 15 with a 5.32e19 best hand. The best AI runs
   reach ante 11 with best hands around 1-2 million: **Opus 5 cold**
   (1,947,113) and **Sol / GPT-5.6 seed-informed** (1,074,154).
+- **Update 2026-09-07: GPT-6-Astra reached ante 13** (best hand 713,536,045,056) in a seed-informed run through Codex, dying to The Manacle at 94B. It is now the deepest AI run and the largest AI hand; see its row for the usage-limit interruptions.
 - **Update 2026-09-02: Wake / Fable 5.1 reached ante 12** (best hand 220,982,175) in a personal-context run (seed file, leaderboard and prior journals read first; not a bench-pure mode). It died to The Wall at 1.2B after clearing ante 11 with a glass Red Seal Queen under Hanging Chad + Photograph. See its row and journal.
 - **Ante 11 was the AI wall before that.** Three separate runs died at The Mouth /
   The Manacle (14.4M requirement) within a factor of ten of each other, while
