@@ -6,3 +6,7 @@ seedtool/Blueprint/
 
 # Local secrets: API keys live here and must never be committed (repo is public)
 .secrets/
+
+# Inspect port: local eval logs
+inspect/logs/
+inspect/logs-test/
