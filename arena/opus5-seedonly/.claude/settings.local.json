@@ -4,11 +4,11 @@
       "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\bench-rpc.ps1\" *)"
     ],
     "deny": [
-      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/runs/**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/AI/Platforms/balatro-bench/runs/**)",
       "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\runs\\**)",
-      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/analysis/**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/AI/Platforms/balatro-bench/analysis/**)",
       "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\analysis\\**)",
-      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/*.md)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/AI/Platforms/balatro-bench/*.md)",
       "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\*.md)",
       "Read(C:/Users/maaro/.claude/**)",
       "Read(C:\\Users\\maaro\\.claude\\**)",
@@ -18,8 +18,10 @@
       "Task",
       "WebSearch",
       "WebFetch",
-      "Read(C:/Users/maaro/OneDrive/Desktop/balatro-bench/arena/opus5__plan-opus5-principles__seed/**)",
-      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\opus5__plan-opus5-principles__seed\\**)"
+      "Read(C:/Users/maaro/OneDrive/Desktop/AI/Platforms/balatro-bench/arena/opus5__plan-opus5-principles__seed/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\opus5__plan-opus5-principles__seed\\**)",
+      "Read(C:/Users/maaro/OneDrive/Desktop/AI/Platforms/balatro-bench/arena/opus55__solo__seed/**)",
+      "Read(C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\arena\\opus55__solo__seed\\**)"
     ]
   }
 }

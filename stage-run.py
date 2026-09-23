@@ -416,7 +416,7 @@ def main():
 
     # ---- sandbox: deny every sibling arm + bench records; allow own tools
     def both_styles(rel):
-        fwd = f"C:/Users/maaro/OneDrive/Desktop/balatro-bench/{rel}".replace("\\", "/")
+        fwd = f"C:/Users/maaro/OneDrive/Desktop/AI/Platforms/balatro-bench/{rel}".replace("\\", "/")
         back = ("C:\\Users\\maaro\\OneDrive\\Desktop\\balatro-bench\\" + rel).replace("/", "\\")
         return [f"Read({fwd})", f"Read({back})"]
 
