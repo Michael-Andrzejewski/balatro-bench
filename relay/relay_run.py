@@ -29,7 +29,8 @@ PORT = 12347
 CONTEXT_CAP = 200_000
 PLAN_CAP = 30_000
 MAX_REDOS = 5
-ENV = {**os.environ, 'CLAUDE_CODE_DISABLE_AUTO_MEMORY': '1', 'ENABLE_CLAUDEAI_MCP_SERVERS': 'false', 'PYTHONIOENCODING': 'utf-8'}
+ENV = {**os.environ, 'CLAUDE_CODE_DISABLE_AUTO_MEMORY': '1', 'ENABLE_CLAUDEAI_MCP_SERVERS': 'false', 'PYTHONIOENCODING': 'utf-8',
+       'CLAUDE_CODE_MAX_OUTPUT_TOKENS': '128000'}  # the CLI default (64k for Fable 5.1) cut off whole planning turns
 sys.path.insert(0, str(RELAY))
 import count_tokens  # noqa: E402
 
@@ -223,6 +224,20 @@ def plan(name):
                f'Write or finish {plan_file} now from what you already know, with no further reading, and keep it at most {PLAN_CAP:,} tokens.')
         result, peak, _ = run_session(arena, 'planner-log.jsonl', msg, st['planner_session'], True)
         st['planner_events'].append({'step': 'forced-finish after cap', 'peak_context': peak}); save_state(name, st)
+    finish_plan(name, st)
+
+
+def plan_continue(name, msg):
+    """Resume an interrupted planner session with a message, then count, redo and ask consent as usual."""
+    p = paths(name); arena = p['planner']; st = load_state(name); use_model(st)
+    if not st.get('planner_session'): sys.exit('No planner session to continue.')
+    result, peak, stopped = run_session(arena, 'planner-log.jsonl', msg, st['planner_session'], True, CONTEXT_CAP)
+    st['planner_events'].append({'step': 'operator continue', 'message': msg, 'peak_context': peak, 'stopped_at_cap': stopped}); save_state(name, st)
+    finish_plan(name, st)
+
+
+def finish_plan(name, st):
+    p = paths(name); arena = p['planner']; plan_file = arena / 'plan.md'
     for attempt in range(MAX_REDOS + 1):
         n = count_tokens.count(plan_file, counter_model()) if plan_file.exists() else None
         st['planner_events'].append({'step': 'count', 'tokens': n}); save_state(name, st)
@@ -278,11 +293,11 @@ def resume(name, msg):
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
-    ap.add_argument('step', choices=['stage', 'canary', 'plan', 'approve', 'play', 'resume'])
+    ap.add_argument('step', choices=['stage', 'canary', 'plan', 'continue', 'approve', 'play', 'resume'])
     ap.add_argument('--name', required=True)
     ap.add_argument('--msg')
     ap.add_argument('--model', default=MODEL)
     ap.add_argument('--note', help='extra line for the planner prompt only')
     a = ap.parse_args()
-    {'stage': lambda: stage(a.name, a.model, a.note), 'canary': lambda: canary(a.name), 'plan': lambda: plan(a.name), 'approve': lambda: approve(a.name),
+    {'stage': lambda: stage(a.name, a.model, a.note), 'canary': lambda: canary(a.name), 'plan': lambda: plan(a.name), 'approve': lambda: approve(a.name), 'continue': lambda: plan_continue(a.name, a.msg),
      'play': lambda: play(a.name), 'resume': lambda: resume(a.name, a.msg)}[a.step]()
