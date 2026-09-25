@@ -151,7 +151,8 @@ def run_codex(arena, log_name, prompt, thread, resume, cap=None, sandbox='worksp
     """One codex exec call with a JSON event log. Returns (final text, peak context tokens, stopped_at_cap)."""
     global LAST_THREAD
     cmd = [newest_codex(), 'exec'] + (['resume', thread] if resume else []) + ['--json', '--ignore-user-config', '-m', MODEL,
-           '-c', f'model_reasoning_effort={CODEX_EFFORT}', '-c', 'web_search=disabled', '--skip-git-repo-check']
+           '-c', f'model_reasoning_effort={CODEX_EFFORT}', '-c', 'web_search=disabled', '-c', 'approval_policy="never"',
+           '-c', 'windows.sandbox="elevated"', '--skip-git-repo-check']  # without the elevated sandbox every command is refused
     cmd += ['-c', f'sandbox_mode="{sandbox}"'] if resume else ['-s', sandbox, '-C', str(arena)]
     if network: cmd += ['-c', 'sandbox_workspace_write.network_access=true']
     cmd += ['-']
