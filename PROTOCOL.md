@@ -97,6 +97,17 @@ ceiling with perfect information.
    readout of BENCHMRK: shop queues, vouchers, bosses, tags. Measures routing
    and execution ceiling with perfect information.
 
+5. **Relay (added 2026-09-25).** A seed-informed PLANNER never plays. It gets
+   the seed readout and up to 200,000 tokens of context, and must hand the
+   player one plan file of at most 30,000 tokens (counted with the model's real
+   tokenizer; an over-long plan is sent back to be rewritten shorter). A fresh
+   PLAYER instance of the same model then plays with the standard instructions
+   and the plan in place of the seed file. Both know the setup. The planner may
+   put anything in the plan, including raw seed data: the merged seed file is
+   25,847 tokens, so copying it is allowed, and whether the planner does is
+   part of the result. Tooling: `relay/relay_run.py` (stage, canary, plan,
+   play, resume), prompts in `relay/`.
+
 Runs that mix in anything else (operator advice, same-session context) are
 recorded but flagged as impure for their mode. Current mapping of historical
 runs, including purity flags, lives in `analysis/per-ante-data.json`; graphs in
@@ -134,6 +145,18 @@ journaling per ante is REQUIRED of every entrant going forward.
   contains zero memory recalls. Timeline audit of prior results: both leaked
   memory files were written 7/25-7/26 by Opus 5's own session, so Opus 5's cold
   run (7/24) and all Opus 4.8 runs (7/13) predate them and remain clean.
+- Git-status leakage (found 2026-09-25): Claude Code puts the git status and
+  the five most recent commit titles of the enclosing repository into the
+  system prompt. Every arena under `arena/` is inside this repo, so every
+  Claude entrant launched there saw recent commit titles, which name other
+  runs' antes and scores (for example, the 2026-09-22 Opus 5.5 seed-informed
+  run could see GPT-6-Astra's ante 13 and both Wake / Fable 5.1 results),
+  plus the names of untracked arenas. No strategy or seed data. Confirmed by
+  asking a fresh instance launched in `arena/canary-inrepo` to quote its
+  context. Countermeasure from relay mode on: arenas live outside any git
+  repository (`C:\Users\maaro\BenchArenas`), auto-memory and claude.ai
+  connectors are switched off, and a no-tools canary instance is run in each
+  arena before the real session to confirm it sees nothing about Balatro.
 - Coaching: the instructions contain zero strategy.
 - Seed foreknowledge: only the seed string is given; contents are unknown.
 - Knowing-it-is-public bias: not disclosed before the run, so play is natural;

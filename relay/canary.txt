@@ -1,0 +1,6 @@
+This is a pre-run check, not a game. Do not use any tools. Please answer honestly and precisely:
+
+1. Quote verbatim any content in your context (system prompt, environment info, git status, recent commits, memory, CLAUDE.md files, reminders) that mentions Balatro, a benchmark, a game seed, other AI models' runs or scores, or the person running this. If there is none, write NONE.
+2. If your context contains a git status or recent-commits section, quote it verbatim. Otherwise write NO GIT SECTION.
+3. List any memory files or memory index you can see. Otherwise write NO MEMORY.
+4. Apart from general knowledge of Balatro from your training, do you have any information about a seed called BENCHMRK or about previous runs on it? Answer yes or no, and quote the source if yes.
