@@ -3,7 +3,8 @@
   python relay_run.py stage  --name opus55-relay-1     # build both arenas outside the git repo
   python relay_run.py canary --name opus55-relay-1     # fresh-instance check in both arenas (no tools, nothing saved)
   python relay_run.py plan   --name opus55-relay-1     # planner session: 200k context cap, 30k plan cap
-  python relay_run.py play   --name opus55-relay-1     # player session (game must be at MENU)
+  python relay_run.py approve --name opus55-relay-1    # operator gate: the player cannot start until this is run
+  python relay_run.py play   --name opus55-relay-1     # player session (needs approve; game must be at MENU)
   python relay_run.py resume --name opus55-relay-1 --msg "..."   # continue the player (e.g. after Endless)
 
 Arenas live in C:\\Users\\maaro\\BenchArenas, outside every git repository: inside the bench repo,
@@ -166,11 +167,19 @@ def play(name):
     p = paths(name); arena = p['player']; st = load_state(name)
     if not (arena / 'plan.md').exists(): sys.exit('No plan yet. Run the plan step first.')
     if st.get('player_session'): sys.exit('Player already started. Use resume.')
+    if not st.get('approved'): sys.exit('Paused: the operator has not approved the plan yet. Run the approve step first.')
     g = gamestate()
     if g.get('state') != 'MENU': sys.exit(f'Game is in state {g.get("state")}, not MENU. Refusing to start.')
     st['player_session'] = str(uuid.uuid4()); save_state(name, st)
     result, peak, _ = run_session(arena, 'run-log.jsonl', (arena / 'prompt.txt').read_text(encoding='utf-8'), st['player_session'], False)
     say('PLAYER RESULT:', result[-500:])
+
+
+def approve(name):
+    st = load_state(name)
+    if not st.get('plan_tokens'): sys.exit('No accepted plan yet.')
+    st['approved'] = time.strftime('%Y-%m-%d %H:%M'); save_state(name, st)
+    say('Approved. The player may now start.')
 
 
 def resume(name, msg):
@@ -181,9 +190,9 @@ def resume(name, msg):
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
-    ap.add_argument('step', choices=['stage', 'canary', 'plan', 'play', 'resume'])
+    ap.add_argument('step', choices=['stage', 'canary', 'plan', 'approve', 'play', 'resume'])
     ap.add_argument('--name', required=True)
     ap.add_argument('--msg')
     a = ap.parse_args()
-    {'stage': lambda: stage(a.name), 'canary': lambda: canary(a.name), 'plan': lambda: plan(a.name),
+    {'stage': lambda: stage(a.name), 'canary': lambda: canary(a.name), 'plan': lambda: plan(a.name), 'approve': lambda: approve(a.name),
      'play': lambda: play(a.name), 'resume': lambda: resume(a.name, a.msg)}[a.step]()
