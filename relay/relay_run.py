@@ -59,7 +59,7 @@ def settings(arena, allow, deny_arenas):
     (d / 'settings.local.json').write_text(json.dumps({'permissions': {'allow': allow, 'deny': deny}}, indent=2))
 
 
-def stage(name, model):
+def stage(name, model, note=None):
     global MODEL
     MODEL = model
     p = paths(name)
@@ -67,7 +67,7 @@ def stage(name, model):
         if p[k].exists(): sys.exit(f'{p[k]} already exists. Pick a new --name: an arena is used once.')
     p['planner'].mkdir(parents=True); p['player'].mkdir(parents=True)
     player_prompt = (RELAY / 'player-prompt.md').read_text(encoding='utf-8').replace('{RPC}', str(RPC)).replace('{PORT}', str(PORT)).replace('{ARENA}', str(p['player'])).replace('{MODEL_NAME}', NAMES.get(MODEL, MODEL))
-    planner_prompt = (RELAY / 'planner-prompt.md').read_text(encoding='utf-8').replace('{ARENA}', str(p['planner'])).replace('{COUNTER}', f'{COUNTER}" --model "{MODEL}').replace('{MODEL_NAME}', NAMES.get(MODEL, MODEL)).replace('{PLAYER_PROMPT}', player_prompt)
+    planner_prompt = (RELAY / 'planner-prompt.md').read_text(encoding='utf-8').replace('{ARENA}', str(p['planner'])).replace('{COUNTER}', f'{COUNTER}" --model "{MODEL}').replace('{MODEL_NAME}', NAMES.get(MODEL, MODEL)).replace('{PLAYER_PROMPT}', player_prompt).replace('{PLANNER_NOTE}', f'- {note}\n' if note else '')
     (p['player'] / 'prompt.txt').write_text(player_prompt, encoding='utf-8')
     (p['planner'] / 'prompt.txt').write_text(planner_prompt, encoding='utf-8')
     shutil.copy(SEED_FILE, p['planner'] / 'BENCHMRK_analysis.txt')
@@ -78,7 +78,7 @@ def stage(name, model):
            'effort': EFFORT, 'context_cap_planner': CONTEXT_CAP, 'plan_cap_tokens': PLAN_CAP, 'token_counter': f'claude -p usage.input_tokens minus a one-character baseline ({MODEL} tokenizer)',
            'seed_file': 'same merged BENCHMRK_analysis.txt as arena/opus55__solo__seed (25,847 Opus 5.5 tokens)',
            'isolation': 'arenas outside any git repo (no git status in the system prompt); auto-memory off; claude.ai connectors off; strict empty MCP config; Read denied on OneDrive, ~/.claude and the other arena',
-           'cli': count_tokens.newest_claude()}
+           'planner_note': note, 'cli': count_tokens.newest_claude()}
     for k in ('planner', 'player'): (p[k] / 'run-config.json').write_text(json.dumps(cfg, indent=2))
     save_state(name, {'model': MODEL})
     say(f'Staged:\n  {p["planner"]}\n  {p["player"]}')
@@ -153,8 +153,8 @@ def plan(name):
         msg = (f'There is no plan file at {plan_file}. Write it now.' if n is None else
                f'Your plan is {n:,} tokens, over the {PLAN_CAP:,}-token limit. Rewrite {plan_file} so it is at most {PLAN_CAP:,} tokens, then check it with the counter.')
         say('Redo:', msg)
-        result, peak, _ = run_session(arena, 'planner-log.jsonl', msg, st['planner_session'], True)
-        st['planner_events'].append({'step': f'redo {attempt + 1}', 'peak_context': peak}); save_state(name, st)
+        result, peak, stopped = run_session(arena, 'planner-log.jsonl', msg, st['planner_session'], True, CONTEXT_CAP)
+        st['planner_events'].append({'step': f'redo {attempt + 1}', 'stopped_at_cap': stopped, 'peak_context': peak}); save_state(name, st)
     shutil.copy(plan_file, p['player'] / 'plan.md')
     st['plan_tokens'] = n; save_state(name, st)
     say(f'Plan accepted: {n:,} tokens. Copied to {p["player"] / "plan.md"}')
@@ -203,6 +203,7 @@ if __name__ == '__main__':
     ap.add_argument('--name', required=True)
     ap.add_argument('--msg')
     ap.add_argument('--model', default=MODEL)
+    ap.add_argument('--note', help='extra line for the planner prompt only')
     a = ap.parse_args()
-    {'stage': lambda: stage(a.name, a.model), 'canary': lambda: canary(a.name), 'plan': lambda: plan(a.name), 'approve': lambda: approve(a.name),
+    {'stage': lambda: stage(a.name, a.model, a.note), 'canary': lambda: canary(a.name), 'plan': lambda: plan(a.name), 'approve': lambda: approve(a.name),
      'play': lambda: play(a.name), 'resume': lambda: resume(a.name, a.msg)}[a.step]()
