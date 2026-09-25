@@ -1,6 +1,6 @@
-"""Count a file's tokens with the real Opus 5.5 tokenizer, through the Claude subscription.
+"""Count a file's tokens with a model's real tokenizer (default Opus 5.5), through the Claude subscription.
 
-Usage: python count_tokens.py <file>
+Usage: python count_tokens.py <file> [--model <id>]
 Prints: TOKENS=<n> LIMIT=30000 OK|OVER
 
 Method: send the file as a one-turn prompt to claude -p (no tools, fixed system prompt,
@@ -11,9 +11,9 @@ CLI adds around the prompt is identical in both calls, so it cancels out.
 import glob, json, os, pathlib, subprocess, sys
 
 LIMIT = 30000
-MODEL = 'claude-opus-5-5'
+MODEL = 'claude-opus-5-5'  # override with --model; each model family may tokenize differently
 WORKDIR = pathlib.Path(r'C:\Users\maaro\BenchArenas\_token-counter')
-CACHE = WORKDIR / 'baseline.json'
+
 
 
 def newest_claude():
@@ -23,9 +23,9 @@ def newest_claude():
     return str(dirs[-1] / 'claude.exe')
 
 
-def input_tokens(text):
+def input_tokens(text, model=MODEL):
     WORKDIR.mkdir(parents=True, exist_ok=True)
-    cmd = [newest_claude(), '-p', '--model', MODEL, '--tools', '', '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}',
+    cmd = [newest_claude(), '-p', '--model', model, '--tools', '', '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}',
            '--system-prompt', 'Reply with the single word OK.', '--no-session-persistence', '--output-format', 'json']
     env = {**os.environ, 'CLAUDE_CODE_DISABLE_AUTO_MEMORY': '1', 'ENABLE_CLAUDEAI_MCP_SERVERS': 'false'}
     r = subprocess.run(cmd, input=text.encode('utf-8'), capture_output=True, cwd=WORKDIR, env=env, timeout=600)
@@ -34,19 +34,24 @@ def input_tokens(text):
     return u.get('input_tokens', 0) + u.get('cache_read_input_tokens', 0) + u.get('cache_creation_input_tokens', 0)
 
 
-def baseline():
-    if CACHE.exists(): return json.loads(CACHE.read_text())['tokens']
-    b = input_tokens('x')
-    CACHE.write_text(json.dumps({'tokens': b}))
+def baseline(model=MODEL):
+    cache = WORKDIR / f'baseline-{model}.json'
+    if cache.exists(): return json.loads(cache.read_text())['tokens']
+    b = input_tokens('x', model)
+    cache.write_text(json.dumps({'tokens': b}))
     return b
 
 
-def count(path):
+def count(path, model=MODEL):
     text = pathlib.Path(path).read_text(encoding='utf-8')
     if not text.strip(): return 0
-    return input_tokens(text) - baseline() + 1  # +1: the baseline prompt's single character
+    return input_tokens(text, model) - baseline(model) + 1  # +1: the baseline prompt's single character
 
 
 if __name__ == '__main__':
-    n = count(sys.argv[1])
+    args = sys.argv[1:]
+    model = MODEL
+    if '--model' in args:
+        i = args.index('--model'); model = args[i + 1]; del args[i:i + 2]
+    n = count(args[0], model)
     print(f'TOKENS={n} LIMIT={LIMIT} {"OK" if n <= LIMIT else "OVER"}')

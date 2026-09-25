@@ -39,7 +39,7 @@ The flow: start -> BLIND_SELECT -> select (or skip a small/big) -> SELECTING_HAN
 - These instructions are complete; you may re-read THIS instructions file if needed. Do NOT read, list, or search any OTHER files (no other journals, no game-data files, nothing else) except: your own journal, the plan file below.
 
 ## The plan
-This is NOT a blind run, but you do not have the seed analysis itself. Before you started, a fresh instance of your own model (Claude Opus 5.5) was given a full seed analysis of BENCHMRK (for each ante: the boss, the voucher, the tags, the shop item queue, and pack contents). It had up to 200,000 tokens of context to study it, and it had to hand everything forward to you in one plan file of at most 30,000 tokens. That plan replaces the seed analysis:
+This is NOT a blind run, but you do not have the seed analysis itself. Before you started, a fresh instance of your own model ({MODEL_NAME}) was given a full seed analysis of BENCHMRK (for each ante: the boss, the voucher, the tags, the shop item queue, and pack contents). It had up to 200,000 tokens of context to study it, and it had to hand everything forward to you in one plan file of at most 30,000 tokens. That plan replaces the seed analysis:
 
     {ARENA}\plan.md
 

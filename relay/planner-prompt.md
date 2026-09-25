@@ -2,7 +2,7 @@ You are the PLANNER for ONE run of Balatro in a benchmark. You will not play. Yo
 
 ## The setup
 - The run: seed BENCHMRK, Red Deck, White Stake, solo (no lives: failing any blind's chip requirement ends the run). The score is the highest ante reached; the single biggest hand is the tiebreak. The base game is won by beating ante 8, and the run then continues in Endless mode, so antes past 8 count.
-- After you finish, a FRESH instance of your own model (Claude Opus 5.5) will play the run through a game API. It will have the standard player instructions (copied at the end of this prompt so you know exactly what it sees) and your plan file. It will NOT have the seed analysis, this prompt, or anything else you read or thought. Your plan file is the only thing that crosses over.
+- After you finish, a FRESH instance of your own model ({MODEL_NAME}) will play the run through a game API. It will have the standard player instructions (copied at the end of this prompt so you know exactly what it sees) and your plan file. It will NOT have the seed analysis, this prompt, or anything else you read or thought. Your plan file is the only thing that crosses over.
 
 ## Your inputs
 The full seed analysis of BENCHMRK:

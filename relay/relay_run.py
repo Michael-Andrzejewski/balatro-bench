@@ -1,6 +1,6 @@
 """Balatro Bench, relay mode: a seed-informed PLANNER hands a plan (max 30k tokens) to a fresh PLAYER.
 
-  python relay_run.py stage  --name opus55-relay-1     # build both arenas outside the git repo
+  python relay_run.py stage  --name opus55-relay-1 [--model claude-fable-5-1]   # build both arenas outside the git repo
   python relay_run.py canary --name opus55-relay-1     # fresh-instance check in both arenas (no tools, nothing saved)
   python relay_run.py plan   --name opus55-relay-1     # planner session: 200k context cap, 30k plan cap
   python relay_run.py approve --name opus55-relay-1    # operator gate: the player cannot start until this is run
@@ -19,7 +19,8 @@ ARENAS = pathlib.Path(r'C:\Users\maaro\BenchArenas')
 SEED_FILE = BENCH / 'arena' / 'opus55__solo__seed' / 'BENCHMRK_analysis.txt'
 RPC = BENCH / 'bench-rpc.ps1'
 COUNTER = RELAY / 'count_tokens.py'
-MODEL = 'claude-opus-5-5'
+MODEL = 'claude-opus-5-5'  # default; stage --model sets it per run
+NAMES = {'claude-opus-5-5': 'Claude Opus 5.5', 'claude-fable-5-1': 'Claude Fable 5.1'}
 EFFORT = 'high'
 PORT = 12347
 CONTEXT_CAP = 200_000
@@ -58,13 +59,15 @@ def settings(arena, allow, deny_arenas):
     (d / 'settings.local.json').write_text(json.dumps({'permissions': {'allow': allow, 'deny': deny}}, indent=2))
 
 
-def stage(name):
+def stage(name, model):
+    global MODEL
+    MODEL = model
     p = paths(name)
     for k in ('planner', 'player'):
         if p[k].exists(): sys.exit(f'{p[k]} already exists. Pick a new --name: an arena is used once.')
     p['planner'].mkdir(parents=True); p['player'].mkdir(parents=True)
-    player_prompt = (RELAY / 'player-prompt.md').read_text(encoding='utf-8').replace('{RPC}', str(RPC)).replace('{PORT}', str(PORT)).replace('{ARENA}', str(p['player']))
-    planner_prompt = (RELAY / 'planner-prompt.md').read_text(encoding='utf-8').replace('{ARENA}', str(p['planner'])).replace('{COUNTER}', str(COUNTER)).replace('{PLAYER_PROMPT}', player_prompt)
+    player_prompt = (RELAY / 'player-prompt.md').read_text(encoding='utf-8').replace('{RPC}', str(RPC)).replace('{PORT}', str(PORT)).replace('{ARENA}', str(p['player'])).replace('{MODEL_NAME}', NAMES.get(MODEL, MODEL))
+    planner_prompt = (RELAY / 'planner-prompt.md').read_text(encoding='utf-8').replace('{ARENA}', str(p['planner'])).replace('{COUNTER}', f'{COUNTER}" --model "{MODEL}').replace('{MODEL_NAME}', NAMES.get(MODEL, MODEL)).replace('{PLAYER_PROMPT}', player_prompt)
     (p['player'] / 'prompt.txt').write_text(player_prompt, encoding='utf-8')
     (p['planner'] / 'prompt.txt').write_text(planner_prompt, encoding='utf-8')
     shutil.copy(SEED_FILE, p['planner'] / 'BENCHMRK_analysis.txt')
@@ -72,13 +75,18 @@ def stage(name):
     settings(p['planner'], [f'Bash(python "{COUNTER}" *)'], others + [p['player']])
     settings(p['player'], [f'Bash(powershell -NoProfile -ExecutionPolicy Bypass -File "{RPC}" *)'], others + [p['planner']])
     cfg = {'staged': time.strftime('%Y-%m-%d'), 'mode': 'relay (seed-informed planner -> plan -> fresh player)', 'planner': MODEL, 'player': MODEL,
-           'effort': EFFORT, 'context_cap_planner': CONTEXT_CAP, 'plan_cap_tokens': PLAN_CAP, 'token_counter': 'claude -p usage.input_tokens minus a one-character baseline (real Opus 5.5 tokenizer)',
-           'seed_file': 'same merged BENCHMRK_analysis.txt as arena/opus55__solo__seed (25,847 tokens by the same counter)',
+           'effort': EFFORT, 'context_cap_planner': CONTEXT_CAP, 'plan_cap_tokens': PLAN_CAP, 'token_counter': f'claude -p usage.input_tokens minus a one-character baseline ({MODEL} tokenizer)',
+           'seed_file': 'same merged BENCHMRK_analysis.txt as arena/opus55__solo__seed (25,847 Opus 5.5 tokens)',
            'isolation': 'arenas outside any git repo (no git status in the system prompt); auto-memory off; claude.ai connectors off; strict empty MCP config; Read denied on OneDrive, ~/.claude and the other arena',
            'cli': count_tokens.newest_claude()}
     for k in ('planner', 'player'): (p[k] / 'run-config.json').write_text(json.dumps(cfg, indent=2))
-    save_state(name, {})
+    save_state(name, {'model': MODEL})
     say(f'Staged:\n  {p["planner"]}\n  {p["player"]}')
+
+
+def use_model(st):
+    global MODEL
+    MODEL = st.get('model', MODEL)
 
 
 def base_cmd(extra):
@@ -87,6 +95,7 @@ def base_cmd(extra):
 
 
 def canary(name):
+    use_model(load_state(name))
     text = (RELAY / 'canary.txt').read_text(encoding='utf-8')
     for k in ('planner', 'player'):
         arena = paths(name)[k]
@@ -124,7 +133,7 @@ def run_session(arena, log_name, prompt, session, resume, cap=None):
 
 
 def plan(name):
-    p = paths(name); arena = p['planner']; st = load_state(name)
+    p = paths(name); arena = p['planner']; st = load_state(name); use_model(st)
     if st.get('planner_session'): sys.exit('Planner already ran for this name.')
     st['planner_session'] = str(uuid.uuid4()); st['planner_events'] = []; save_state(name, st)
     prompt = (arena / 'prompt.txt').read_text(encoding='utf-8')
@@ -137,7 +146,7 @@ def plan(name):
         result, peak, _ = run_session(arena, 'planner-log.jsonl', msg, st['planner_session'], True)
         st['planner_events'].append({'step': 'forced-finish after cap', 'peak_context': peak}); save_state(name, st)
     for attempt in range(MAX_REDOS + 1):
-        n = count_tokens.count(plan_file) if plan_file.exists() else None
+        n = count_tokens.count(plan_file, MODEL) if plan_file.exists() else None
         st['planner_events'].append({'step': 'count', 'tokens': n}); save_state(name, st)
         if n is not None and 0 < n <= PLAN_CAP: break
         if attempt == MAX_REDOS: sys.exit(f'Plan still invalid after {MAX_REDOS} redos ({n} tokens).')
@@ -164,7 +173,7 @@ def gamestate():
 
 
 def play(name):
-    p = paths(name); arena = p['player']; st = load_state(name)
+    p = paths(name); arena = p['player']; st = load_state(name); use_model(st)
     if not (arena / 'plan.md').exists(): sys.exit('No plan yet. Run the plan step first.')
     if st.get('player_session'): sys.exit('Player already started. Use resume.')
     if not st.get('approved'): sys.exit('Paused: the operator has not approved the plan yet. Run the approve step first.')
@@ -183,7 +192,7 @@ def approve(name):
 
 
 def resume(name, msg):
-    p = paths(name); st = load_state(name)
+    p = paths(name); st = load_state(name); use_model(st)
     result, peak, _ = run_session(p['player'], 'run-log.jsonl', msg, st['player_session'], True)
     say('PLAYER RESULT:', result[-500:])
 
@@ -193,6 +202,7 @@ if __name__ == '__main__':
     ap.add_argument('step', choices=['stage', 'canary', 'plan', 'approve', 'play', 'resume'])
     ap.add_argument('--name', required=True)
     ap.add_argument('--msg')
+    ap.add_argument('--model', default=MODEL)
     a = ap.parse_args()
-    {'stage': lambda: stage(a.name), 'canary': lambda: canary(a.name), 'plan': lambda: plan(a.name), 'approve': lambda: approve(a.name),
+    {'stage': lambda: stage(a.name, a.model), 'canary': lambda: canary(a.name), 'plan': lambda: plan(a.name), 'approve': lambda: approve(a.name),
      'play': lambda: play(a.name), 'resume': lambda: resume(a.name, a.msg)}[a.step]()
