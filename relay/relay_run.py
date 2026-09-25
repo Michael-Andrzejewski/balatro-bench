@@ -20,8 +20,11 @@ SEED_FILE = BENCH / 'arena' / 'opus55__solo__seed' / 'BENCHMRK_analysis.txt'
 RPC = BENCH / 'bench-rpc.ps1'
 COUNTER = RELAY / 'count_tokens.py'
 MODEL = 'claude-opus-5-5'  # default; stage --model sets it per run
-NAMES = {'claude-opus-5-5': 'Claude Opus 5.5', 'claude-fable-5-1': 'Claude Fable 5.1'}
+NAMES = {'claude-opus-5-5': 'Claude Opus 5.5', 'claude-fable-5-1': 'Claude Fable 5.1', 'gpt-6-astra': 'GPT-6-Astra'}
 EFFORT = 'high'
+CODEX_EFFORT = 'low'  # GPT-6-Astra's own bench run (2026-09-04) ran at low
+REFERENCE_COUNTER_MODEL = 'claude-opus-5-5'  # non-Claude plans are counted with this tokenizer
+LAST_THREAD = None
 PORT = 12347
 CONTEXT_CAP = 200_000
 PLAN_CAP = 30_000
@@ -32,6 +35,17 @@ import count_tokens  # noqa: E402
 
 
 def say(*a): print(*a, flush=True)
+
+
+def is_codex(): return MODEL.startswith('gpt-')
+
+
+def counter_model(): return REFERENCE_COUNTER_MODEL if is_codex() else MODEL
+
+
+def newest_codex():
+    exes = sorted(pathlib.Path(os.environ['LOCALAPPDATA'], 'OpenAI', 'Codex', 'bin').glob('*/codex.exe'), key=lambda f: f.stat().st_mtime)
+    return str(exes[-1])
 
 
 def paths(name):
@@ -68,6 +82,15 @@ def stage(name, model, note=None):
     p['planner'].mkdir(parents=True); p['player'].mkdir(parents=True)
     player_prompt = (RELAY / 'player-prompt.md').read_text(encoding='utf-8').replace('{RPC}', str(RPC)).replace('{PORT}', str(PORT)).replace('{ARENA}', str(p['player'])).replace('{MODEL_NAME}', NAMES.get(MODEL, MODEL))
     planner_prompt = (RELAY / 'planner-prompt.md').read_text(encoding='utf-8').replace('{ARENA}', str(p['planner'])).replace('{COUNTER}', f'{COUNTER}" --model "{MODEL}').replace('{MODEL_NAME}', NAMES.get(MODEL, MODEL)).replace('{PLAYER_PROMPT}', player_prompt).replace('{PLANNER_NOTE}', f'- {note}\n' if note else '')
+    if is_codex():  # no network in the planner sandbox, so the counter cannot run there
+        block = planner_prompt[planner_prompt.index('- The plan file: at most'):planner_prompt.index('## Your output')]
+        planner_prompt = planner_prompt.replace(block, (
+            "- The plan file: at most 30,000 tokens, counted by the harness with the benchmark's reference tokenizer "
+            "(Claude Opus 5.5's, the same for every entrant). You cannot run the counter from your sandbox. As a guide, this kind of text "
+            "measured about 1.9 characters per token, so 30,000 tokens is roughly 57,000 characters. When you finish, the harness counts "
+            "the plan. If it is over the limit, you will be asked to rewrite it shorter.\n\n"))
+        planner_prompt = planner_prompt.replace('When the plan is done and the counter says OK, end with one line: PLAN READY tokens=<n>',
+                                                'When the plan is done, end with one line: PLAN READY')
     (p['player'] / 'prompt.txt').write_text(player_prompt, encoding='utf-8')
     (p['planner'] / 'prompt.txt').write_text(planner_prompt, encoding='utf-8')
     shutil.copy(SEED_FILE, p['planner'] / 'BENCHMRK_analysis.txt')
@@ -75,10 +98,14 @@ def stage(name, model, note=None):
     settings(p['planner'], [f'Bash(python "{COUNTER}" *)'], others + [p['player']])
     settings(p['player'], [f'Bash(powershell -NoProfile -ExecutionPolicy Bypass -File "{RPC}" *)'], others + [p['planner']])
     cfg = {'staged': time.strftime('%Y-%m-%d'), 'mode': 'relay (seed-informed planner -> plan -> fresh player)', 'planner': MODEL, 'player': MODEL,
-           'effort': EFFORT, 'context_cap_planner': CONTEXT_CAP, 'plan_cap_tokens': PLAN_CAP, 'token_counter': f'claude -p usage.input_tokens minus a one-character baseline ({MODEL} tokenizer)',
+           'effort': CODEX_EFFORT if is_codex() else EFFORT, 'context_cap_planner': CONTEXT_CAP, 'plan_cap_tokens': PLAN_CAP, 'token_counter': f'claude -p usage.input_tokens minus a one-character baseline ({counter_model()} tokenizer)',
            'seed_file': 'same merged BENCHMRK_analysis.txt as arena/opus55__solo__seed (25,847 Opus 5.5 tokens)',
            'isolation': 'arenas outside any git repo (no git status in the system prompt); auto-memory off; claude.ai connectors off; strict empty MCP config; Read denied on OneDrive, ~/.claude and the other arena',
-           'planner_note': note, 'cli': count_tokens.newest_claude()}
+           'planner_note': note, 'cli': newest_codex() if is_codex() else count_tokens.newest_claude()}
+    if is_codex():
+        cfg['isolation'] = ('arenas outside any git repo; codex --ignore-user-config (no plugins), web search disabled, planner sandbox without network, '
+                            'player sandbox with network for the localhost game API; Codex has no read-deny rules, so the transcript is audited; '
+                            '~/.codex memories and AGENTS.md verified empty 2026-09-25')
     for k in ('planner', 'player'): (p[k] / 'run-config.json').write_text(json.dumps(cfg, indent=2))
     save_state(name, {'model': MODEL})
     say(f'Staged:\n  {p["planner"]}\n  {p["player"]}')
@@ -99,6 +126,9 @@ def canary(name):
     text = (RELAY / 'canary.txt').read_text(encoding='utf-8')
     for k in ('planner', 'player'):
         arena = paths(name)[k]
+        if is_codex():
+            answer = run_codex(arena, 'canary-log.jsonl', text, None, False, sandbox='read-only')[0]
+            (arena / 'canary.txt').write_text(answer, encoding='utf-8'); say(f'===== {k} arena =====\n{answer}\n'); continue
         r = subprocess.run(base_cmd(['--tools', '', '--no-session-persistence', '--output-format', 'json']), input=text.encode('utf-8'),
                            capture_output=True, cwd=arena, env=ENV, timeout=600)
         answer = json.loads(r.stdout.decode('utf-8'))['result']
@@ -106,7 +136,53 @@ def canary(name):
         say(f'===== {k} arena =====\n{answer}\n')
 
 
-def run_session(arena, log_name, prompt, session, resume, cap=None):
+def codex_peak(thread):
+    peak = 0
+    for f in pathlib.Path.home().joinpath('.codex', 'sessions').glob(f'*/*/*/rollout-*{thread}.jsonl'):
+        for line in f.open(encoding='utf-8', errors='replace'):
+            if '"token_count"' not in line: continue
+            try: u = json.loads(line)['payload']['info']['last_token_usage']
+            except (ValueError, KeyError, TypeError): continue
+            peak = max(peak, u.get('input_tokens', 0) + u.get('output_tokens', 0))
+    return peak
+
+
+def run_codex(arena, log_name, prompt, thread, resume, cap=None, sandbox='workspace-write', network=False):
+    """One codex exec call with a JSON event log. Returns (final text, peak context tokens, stopped_at_cap)."""
+    global LAST_THREAD
+    cmd = [newest_codex(), 'exec'] + (['resume', thread] if resume else []) + ['--json', '--ignore-user-config', '-m', MODEL,
+           '-c', f'model_reasoning_effort={CODEX_EFFORT}', '-c', 'web_search=disabled', '--skip-git-repo-check']
+    cmd += ['-c', f'sandbox_mode="{sandbox}"'] if resume else ['-s', sandbox, '-C', str(arena)]
+    if network: cmd += ['-c', 'sandbox_workspace_write.network_access=true']
+    cmd += ['-']
+    log = (arena / log_name).open('a', encoding='utf-8')
+    proc = subprocess.Popen(cmd, cwd=arena, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=log)
+    proc.stdin.write(prompt.encode('utf-8')); proc.stdin.close()
+    peak, result, stopped = 0, '', False
+    for raw in proc.stdout:
+        line = raw.decode('utf-8', 'replace'); log.write(line); log.flush()
+        try: ev = json.loads(line)
+        except ValueError: continue
+        if ev.get('type') == 'thread.started': LAST_THREAD = thread = ev['thread_id']
+        item = ev.get('item') or {}
+        if item.get('type') == 'agent_message':
+            result = item.get('text', ''); say('  >', result[:300].replace('\n', ' '))
+        if thread and ev.get('type', '').startswith('item.'):
+            peak = max(peak, codex_peak(thread))
+            if cap and peak >= cap:
+                say(f'Context reached {peak:,} tokens: stopping the session at the {cap:,} cap.')
+                subprocess.run(['taskkill', '/PID', str(proc.pid), '/T', '/F'], capture_output=True); stopped = True; break
+    proc.wait(); log.close()
+    if thread: peak = max(peak, codex_peak(thread))
+    return result, peak, stopped
+
+
+def run_session(arena, log_name, prompt, session, resume, cap=None, network=False):
+    if is_codex(): return run_codex(arena, log_name, prompt, session, resume, cap, network=network)
+    return run_claude(arena, log_name, prompt, session, resume, cap)
+
+
+def run_claude(arena, log_name, prompt, session, resume, cap=None):
     """One claude -p call with a stream-json log. Returns (final text, peak context tokens, stopped_at_cap)."""
     cmd = base_cmd(['--output-format', 'stream-json', '--verbose'] + (['--resume', session] if resume else ['--session-id', session]))
     log = (arena / log_name).open('a', encoding='utf-8')
@@ -135,9 +211,10 @@ def run_session(arena, log_name, prompt, session, resume, cap=None):
 def plan(name):
     p = paths(name); arena = p['planner']; st = load_state(name); use_model(st)
     if st.get('planner_session'): sys.exit('Planner already ran for this name.')
-    st['planner_session'] = str(uuid.uuid4()); st['planner_events'] = []; save_state(name, st)
+    st['planner_session'] = None if is_codex() else str(uuid.uuid4()); st['planner_events'] = []; save_state(name, st)
     prompt = (arena / 'prompt.txt').read_text(encoding='utf-8')
     result, peak, stopped = run_session(arena, 'planner-log.jsonl', prompt, st['planner_session'], False, CONTEXT_CAP)
+    if is_codex(): st['planner_session'] = LAST_THREAD
     st['planner_events'].append({'step': 'plan', 'peak_context': peak, 'stopped_at_cap': stopped}); save_state(name, st)
     plan_file = arena / 'plan.md'
     if stopped:
@@ -146,12 +223,12 @@ def plan(name):
         result, peak, _ = run_session(arena, 'planner-log.jsonl', msg, st['planner_session'], True)
         st['planner_events'].append({'step': 'forced-finish after cap', 'peak_context': peak}); save_state(name, st)
     for attempt in range(MAX_REDOS + 1):
-        n = count_tokens.count(plan_file, MODEL) if plan_file.exists() else None
+        n = count_tokens.count(plan_file, counter_model()) if plan_file.exists() else None
         st['planner_events'].append({'step': 'count', 'tokens': n}); save_state(name, st)
         if n is not None and 0 < n <= PLAN_CAP: break
         if attempt == MAX_REDOS: sys.exit(f'Plan still invalid after {MAX_REDOS} redos ({n} tokens).')
         msg = (f'There is no plan file at {plan_file}. Write it now.' if n is None else
-               f'Your plan is {n:,} tokens, over the {PLAN_CAP:,}-token limit. Rewrite {plan_file} so it is at most {PLAN_CAP:,} tokens, then check it with the counter.')
+               f'Your plan is {n:,} tokens, over the {PLAN_CAP:,}-token limit. Rewrite {plan_file} so it is at most {PLAN_CAP:,} tokens' + ('.' if is_codex() else ', then check it with the counter.'))
         say('Redo:', msg)
         result, peak, stopped = run_session(arena, 'planner-log.jsonl', msg, st['planner_session'], True, CONTEXT_CAP)
         st['planner_events'].append({'step': f'redo {attempt + 1}', 'stopped_at_cap': stopped, 'peak_context': peak}); save_state(name, st)
@@ -179,8 +256,9 @@ def play(name):
     if not st.get('approved'): sys.exit('Paused: the operator has not approved the plan yet. Run the approve step first.')
     g = gamestate()
     if g.get('state') != 'MENU': sys.exit(f'Game is in state {g.get("state")}, not MENU. Refusing to start.')
-    st['player_session'] = str(uuid.uuid4()); save_state(name, st)
-    result, peak, _ = run_session(arena, 'run-log.jsonl', (arena / 'prompt.txt').read_text(encoding='utf-8'), st['player_session'], False)
+    st['player_session'] = None if is_codex() else str(uuid.uuid4()); save_state(name, st)
+    result, peak, _ = run_session(arena, 'run-log.jsonl', (arena / 'prompt.txt').read_text(encoding='utf-8'), st['player_session'], False, network=True)
+    if is_codex(): st['player_session'] = LAST_THREAD; save_state(name, st)
     say('PLAYER RESULT:', result[-500:])
 
 
@@ -193,7 +271,7 @@ def approve(name):
 
 def resume(name, msg):
     p = paths(name); st = load_state(name); use_model(st)
-    result, peak, _ = run_session(p['player'], 'run-log.jsonl', msg, st['player_session'], True)
+    result, peak, _ = run_session(p['player'], 'run-log.jsonl', msg, st['player_session'], True, network=True)
     say('PLAYER RESULT:', result[-500:])
 
 
