@@ -161,7 +161,7 @@ def settings(p):
         deny += [f'Read({d}/**)', f'Edit({d}/**)', f'Write({d}/**)']
     deny += ['Agent', 'Task'] + [f'WebFetch(domain:{d})' for d in
                                  ('github.com', 'raw.githubusercontent.com', 'gist.github.com', 'githubusercontent.com', 'x.com', 'twitter.com')]
-    allow = ['WebSearch', 'WebFetch', f'Bash(python "{COUNTER}" *)', f'Read({fwd(p["root"])}/**)', f'Edit({fwd(p["root"])}/**)', f'Write({fwd(p["root"])}/**)']
+    allow = ['WebSearch', 'WebFetch', f'Bash(python "{COUNTER}" *)', f'Bash(python "{fwd(COUNTER)}" *)', f'PowerShell(python "{COUNTER}" *)',f'Read({fwd(p["root"])}/**)', f'Edit({fwd(p["root"])}/**)', f'Write({fwd(p["root"])}/**)']
     d = p['root'] / '.claude'; d.mkdir(parents=True, exist_ok=True)
     (d / 'settings.local.json').write_text(json.dumps({'permissions': {'allow': allow, 'deny': deny}}, indent=2))
 
@@ -294,10 +294,24 @@ def run(name, max_rounds):
 def finish(name, st):
     p = paths(name)
     n = count_tokens.count(p['plan'], MODEL) if p['plan'].exists() else None
-    final = p['harness'] / 'plan-FINAL.md'
+    final = p['harness'] / f'plan-FINAL-round{st["round"]:02d}.md'  # a reopened swarm never overwrites an earlier final
     shutil.copy(p['plan'], final)
     st['done'] = True; st['final_tokens'] = n; st['finished'] = time.strftime('%Y-%m-%d %H:%M'); save_state(name, st)
     say(f'ALL FIVE SIGNED OFF after round {st["round"]}. Plan: {final} ({n:,} tokens{" OVER THE CAP" if n and n > PLAN_CAP else ""}).')
+
+
+def reopen(name, msg):
+    """Post an operator message to the board and reopen a finished swarm; the next `run` delivers it to all five."""
+    st = load_state(name)
+    p = paths(name)
+    st['posts'] += 1
+    f = p['board'] / f'{st["posts"]:04d}-r{st["round"]:02d}-operator.md'
+    f.write_text(f'# {st["posts"]:04d} | round {st["round"]} | from the OPERATOR (Michael, who runs this benchmark)\n\n{msg}\n', encoding='utf-8')
+    with (p['harness'] / 'transcript.md').open('a', encoding='utf-8') as t:
+        t.write(f'\n\n---\n# {st["posts"]:04d} | round {st["round"]} | from the OPERATOR\n\n{msg}\n')
+    st['done'] = False; st.setdefault('reopened', []).append(time.strftime('%Y-%m-%d %H:%M'))
+    save_state(name, st)
+    say(f'Posted {f.name}; swarm reopened. Continue with: python swarm_run.py run --name {name}')
 
 
 def audit(name):
@@ -322,8 +336,9 @@ def audit(name):
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
-    ap.add_argument('step', choices=['stage', 'canary', 'run', 'audit'])
+    ap.add_argument('step', choices=['stage', 'canary', 'run', 'audit', 'reopen'])
+    ap.add_argument('--msg', help='operator message for reopen')
     ap.add_argument('--name', required=True)
     ap.add_argument('--rounds', type=int, default=12, help='max rounds this invocation (run continues from saved state)')
     a = ap.parse_args()
-    {'stage': lambda: stage(a.name), 'canary': lambda: canary(a.name), 'run': lambda: run(a.name, a.rounds), 'audit': lambda: audit(a.name)}[a.step]()
+    {'stage': lambda: stage(a.name), 'canary': lambda: canary(a.name), 'run': lambda: run(a.name, a.rounds), 'audit': lambda: audit(a.name), 'reopen': lambda: reopen(a.name, a.msg)}[a.step]()
