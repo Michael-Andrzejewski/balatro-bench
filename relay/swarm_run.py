@@ -59,7 +59,8 @@ decisions into an ante-by-ante plan another AI can follow cold: what to buy, ski
 preparation; money targets; pivot rules; and how to keep scaling through Endless toward naneinf. Keep it at most 30,000
 tokens (check with the counter). Accept corrections from Assay and rulings from Loom; push back when something is wrong.
 When the plan is complete, every open objection is resolved, and you are 100% confident it is the best route the team
-can find, write the line PLAN APPROVED in your board message.""",
+can find, put PLAN APPROVED on a line by itself in your board message. Never write that phrase otherwise.
+To count tokens, use the Bash tool with exactly the counter command from the brief (not PowerShell).""",
 }
 
 
@@ -280,7 +281,7 @@ def run(name, max_rounds):
         parallel(name, st, ['keel', 'kite'], lambda a: TASKS[a])
         for a in ('loom', 'assay'): parallel(name, st, [a], lambda a: TASKS[a])
         arrow = parallel(name, st, ['arrow'], lambda a: TASKS[a])['arrow']
-        if 'PLAN APPROVED' not in arrow: continue
+        if not re.search(r'^\W*PLAN APPROVED\W*$', arrow, re.M): continue  # its own line; "I'll post PLAN APPROVED once..." is not approval
         say('  Arrow approved. Sign-off round.')
         reviews = parallel(name, st, REVIEWERS, lambda a: SIGNOFF)
         ok = all(re.search(r'\bSIGN-OFF\b', r) and re.search(r'CONFIDENCE:\s*100\s*%', r) and 'OBJECTION' not in r for r in reviews.values())
