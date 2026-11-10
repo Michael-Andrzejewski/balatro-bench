@@ -18,9 +18,11 @@ WORKDIR = pathlib.Path(r'C:\Users\maaro\BenchArenas\_token-counter')
 
 def newest_claude():
     base = pathlib.Path(os.environ['APPDATA']) / 'Claude' / 'claude-code'
-    dirs = sorted((p for p in base.glob('2.*') if (p / 'claude.exe').exists()),
-                  key=lambda p: tuple(int(x) for x in p.name.split('.')))
-    return str(dirs[-1] / 'claude.exe')
+    found = []
+    for d in base.glob('2.*'):  # newer app builds keep the exe one level down, in a hash-named folder
+        exes = [d / 'claude.exe'] if (d / 'claude.exe').exists() else sorted(d.glob('*/claude.exe'), key=lambda f: f.stat().st_mtime)
+        if exes: found.append((tuple(int(x) for x in d.name.split('.')), str(exes[-1])))
+    return max(found)[1]
 
 
 def input_tokens(text, model=MODEL):
