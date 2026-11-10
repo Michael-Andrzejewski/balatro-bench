@@ -23,6 +23,7 @@ import argparse, importlib.util, json, os, pathlib, subprocess, sys, time, uuid
 
 RELAY = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(RELAY))
+for _s in (sys.stdout, sys.stderr): _s.reconfigure(encoding='utf-8', errors='replace')  # a cp1252 console cannot print every character a player writes
 import relay_run as R  # noqa: E402
 import count_tokens  # noqa: E402
 

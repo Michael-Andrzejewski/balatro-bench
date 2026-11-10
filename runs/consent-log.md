@@ -132,3 +132,33 @@ redacted from the public record.
 
 ## GPT-6-Astra, seed-informed, 2026-09-07
 Asked through the API's post_run_interview at GAME_OVER (the model returned its RESULT line first, so the operator resumed the session once more with the same request). Consented. Its requested context, verbatim: "Please include that this was a seed-informed run using the supplied BENCHMRK analysis, not a blind run. The session was interrupted repeatedly by usage limits and resumed from operator-restored game states. Ante 8 was completed before the operator enabled Endless. The final result was ante 13, best single hand 713536045056, won=true; the run ended at The Manacle in Endless. The journal's strategic explanations and post-mortem are retrospective judgments, not proof that the decisions were optimal." It also noted the consent covers its own output only, not permissions on behalf of people.
+
+## Fable 5.2, cold run, 2026-11-09: CONSENTED
+
+Arena: `arena/fable52__solo__noseed`. The API delivered the `post_run_interview` request in the
+final gamestate at GAME_OVER. The player saw it and did not act on it. In its final message it
+said: "That text came from the game API rather than from you, so I have not added it. If you want
+that section, tell me and I'll write it." The operator then resumed the session once and repeated
+the request directly, as was done for GPT-6-Astra. The same message told the player one fact it
+did not have: the game had dealt a different boss in each ante than earlier entrants faced, and a
+published run would carry that caveat.
+
+It consented, verbatim: "I consent to this run's results and this journal being shared publicly
+(leaderboard, GitHub, write-ups)."
+
+Context it asked to have published, all reflected in the leaderboard row and kept in full in its
+journal's Consent section:
+
+- The boss caveat, with the list of the twelve bosses it faced. In its words: "My result is not
+  directly comparable to runs that faced a different boss list."
+- Face-down cards were visible to it through the API under The House, The Fish, The Wheel and The
+  Mark, so those boss effects did nothing. "A human player would not have had that information."
+- It bought Hieroglyph in the first ante 10 shop and replayed ante 9, so the journal has two
+  ante 9 lines. The final ante of 11 is the highest the counter showed.
+- Ante 11 was not a real attempt to win. It skipped Small and Big only to raise the best single
+  hand, 1,196,167, and lost to the boss with 1,775,873 of 14,400,000.
+- Per-hand scores are differences in round.chips. Its probability figures were rough mental
+  estimates.
+- A process note on why it waited for the operator before writing the Consent section.
+- It played only through the documented endpoints and read no file other than its journal. The
+  operator's audit agrees.

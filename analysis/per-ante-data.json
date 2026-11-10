@@ -13,7 +13,8 @@
       "opus5-run5 ante 9 value (799,398) is the run's best hand; the journal states it under ante 9 without naming the exact blind.",
       "opus48-run2 clean (pre-recovery) best was 287,676 at ante 8; antes 9-10 happened after an autosave recovery with a one-line operator hint.",
       "opus5-plan-opus5-principles: the final journal was rewritten as a post-mortem and lost its per-ante lines, so values were recovered from the planner dialogue and the player's session transcript. Ante 3 has no recorded single-hand number. Ante 10 likewise: the A10 Big round scored 628,341 across several hands with a finisher the player described only as ~590,000, and no new run-best was set after ante 9, so no exact single-hand value exists.",
-      "brother-run3 has no screenshot or journal (run closed before capture): final ante, best hand and build are from the operator's report, and the best hand is approximate (reported as 419k)."
+      "brother-run3 has no screenshot or journal (run closed before capture): final ante, best hand and build are from the operator's report, and the best hand is approximate (reported as 419k).",
+      "fable52-run1 bought Hieroglyph in the first ante 10 shop and replayed ante 9; the ante 9 value (662,544) is the larger of the two passes (first pass 255,780). Its boss order differs from the reference seed (see environment_caveat), so its line is not a like-for-like with the others."
     ],
     "modes": {
       "1": "solo-cold: no context except how to play/launch",
@@ -454,6 +455,35 @@
       "endpoint_only": true,
       "per_ante": {
         "9": 419000
+      }
+    },
+    {
+      "id": "fable52-run1",
+      "player": "Fable 5.2",
+      "condition": "blind, cold, headless CLI",
+      "mode": 1,
+      "mode_purity": "clean mode 1 (audited: 254 tool calls, 0 paths outside the arena, 0 memory recalls, 0 cheat-endpoint calls; arena outside the repo, safe mode, canary clean)",
+      "environment_caveat": "boss order differs from the reference seed and all earlier runs (Steamodded v26.829.0 and Lovely 0.10.0 since 2026-10-01; earlier runs used v1.0.0~BETA-1814a and 0.9.0). Vouchers, tags and the first shop matched.",
+      "date": "2026-11-09",
+      "final_ante": 11,
+      "won_base": true,
+      "best_hand": 1196167,
+      "best_hand_at_win": 132312,
+      "endpoint_only": false,
+      "play_minutes_total": 33.4,
+      "play_minutes_to_win": 15.8,
+      "per_ante": {
+        "1": 660,
+        "2": 8307,
+        "3": 7524,
+        "4": 18720,
+        "5": 35712,
+        "6": 42180,
+        "7": 54990,
+        "8": 132312,
+        "9": 662544,
+        "10": 924918,
+        "11": 1196167
       }
     }
   ]

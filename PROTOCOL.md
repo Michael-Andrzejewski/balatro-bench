@@ -157,6 +157,19 @@ journaling per ante is REQUIRED of every entrant going forward.
   repository (`C:\Users\maaro\BenchArenas`), auto-memory and claude.ai
   connectors are switched off, and a no-tools canary instance is run in each
   arena before the real session to confirm it sees nothing about Balatro.
+- User-level instruction leakage (found 2026-11-09): by November the user-level
+  `~/.claude/CLAUDE.md` had grown, and it loads into every Claude Code session on
+  the machine. It now points sessions at a shared memory folder, and that folder
+  holds this bench's history. The relay-era launch did not block it. Countermeasure
+  from the Fable 5.2 cold run on (`relay/cold_run.py`): the player launches with
+  `--safe-mode` and `--setting-sources project,local` (no user CLAUDE.md, skills,
+  plugins or hooks), the operator session's own `CLAUDE_*` and `ANTHROPIC_*`
+  variables are not passed on, more paths are read-denied, and the canary must
+  report no CLAUDE.md content. Two launch notes from the same day: a headless
+  player needs the command-line login (`claude auth login --claudeai`), since the
+  desktop app's login does not reach processes a session starts; and a model the
+  CLI does not know yet gets a 200k window and a 32k output cap unless its id
+  carries the `[1m]` suffix.
 - Coaching: the instructions contain zero strategy.
 - Seed foreknowledge: only the seed string is given; contents are unknown.
 - Knowing-it-is-public bias: not disclosed before the run, so play is natural;
@@ -173,6 +186,18 @@ journaling per ante is REQUIRED of every entrant going forward.
   lost at least one pack pick to it at full joker slots (it appears in the
   journals as a learned "game rule"). Runs before this date played under the
   stricter gate; treat cross-date comparisons of pack decisions accordingly.
+- 2026-10-01: the mod framework on the bench machine was upgraded (Steamodded
+  `v1.0.0~BETA-1814a` to `v26.829.0`, Lovely 0.9.0 to 0.10.0). First noticed on
+  2026-11-09, during the Fable 5.2 cold run: seed `BENCHMRK` still deals the same
+  vouchers, tags and first shop as the reference analysis (checked for antes 1-5),
+  but a different boss in every ante (The Head, The Pillar, The House, The Fish,
+  The Window where the reference has The Pillar, The Hook, The Tooth, The Wheel,
+  The Club). The new Steamodded rewrites `get_new_boss`; that it is the cause is
+  inferred from the loader logs and the patched game code, not tested side by
+  side. Runs after this date are not like-for-like with runs before it until the
+  old versions are pinned for bench launches. The per-run purity check (mods
+  skipped in the loader log) cannot catch this, so compare the Steamodded and
+  Lovely version lines in the loader log before each run as well.
 
 ## Known limitations
 

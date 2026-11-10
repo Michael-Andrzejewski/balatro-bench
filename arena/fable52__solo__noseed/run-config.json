@@ -1,0 +1,57 @@
+{
+  "staged": "2026-11-09",
+  "mode": "mode 1: solo, cold (no journal, no planner, no seed file)",
+  "player": "claude-fable-5-2",
+  "model_flag": "claude-fable-5-2[1m]",
+  "planner": null,
+  "seed_info": false,
+  "effort": "high",
+  "arm": "fable52__solo__noseed",
+  "prompt": "stage-run.py PLAYER_BASE as built for --planner none --seed-info off",
+  "isolation": "arena outside any git repo; --safe-mode (no user CLAUDE.md, skills, plugins, hooks); auto-memory off; claude.ai connectors off; strict empty MCP config; operator-session CLAUDE_*/ANTHROPIC_* variables not passed on; Read denied on OneDrive, ~/.claude, Documents, Downloads, the game and desktop-app AppData, and every other arena",
+  "cli": "C:\\Users\\maaro\\AppData\\Roaming\\Claude\\claude-code\\2.1.317\\a33aa5518497\\claude.exe",
+  "launched_with": "relay/cold_run.py (stage, canary, play, resume); headless claude -p, stream-json log",
+  "cli_version": "2.1.317 (bundled with the desktop app), Claude subscription login, apiKeySource none",
+  "context_window": 1000000,
+  "max_output_tokens": 128000,
+  "environment": {
+    "balatro_steam_buildid": "17459173",
+    "balatrobot": "1.5.2, fable branch, commit 38c4e60",
+    "steamodded": "v26.829.0",
+    "lovely": "0.10.0",
+    "mods_blacklisted": 33,
+    "loader_log": "lovely-2026.11.09-18.06.24.log"
+  },
+  "caveat_boss_order": "Seed BENCHMRK was set and recorded in the save; vouchers and tags matched the reference analysis in antes 1-5 and the first shop matched, but the boss in every ante differed from the reference and from earlier runs (ante 1-5 here: The Head, The Pillar, The House, The Fish, The Window; reference: The Pillar, The Hook, The Tooth, The Wheel, The Club). Earlier runs used Steamodded v1.0.0~BETA-1814a and Lovely 0.9.0; the mod framework was upgraded on 2026-10-01 and the new Steamodded rewrites get_new_boss. Cause inferred from the loader logs and the patched game code, not tested side by side.",
+  "result": {
+    "final_ante": 11,
+    "won_base": true,
+    "best_hand": 1196167,
+    "defeated_by": "The Mark (boss), 1,775,873 of 14,400,000",
+    "round": 29,
+    "source": "game state and the game-over screenshot"
+  },
+  "timing": {
+    "started": "2026-11-09 18:06:56",
+    "win_screen": "2026-11-09 18:22:46",
+    "endless_resumed": "2026-11-09 18:27",
+    "game_over": "2026-11-09 18:45:32",
+    "play_minutes_to_win": 15.8,
+    "play_minutes_endless": 17.6,
+    "play_minutes_total": 33.4
+  },
+  "effort_counts": {
+    "model_turns": 257,
+    "tool_calls": 254,
+    "api_calls": 367,
+    "output_tokens": 89809,
+    "cache_read_tokens": 31413134,
+    "peak_context_tokens": 257309
+  },
+  "operator_messages": [
+    "The operator has taken the screenshot and clicked Endless. Continue.",
+    "After GAME_OVER: the consent request repeated by the operator, with the boss-order caveat stated (see runs/consent-log.md)."
+  ],
+  "audit": "254 tool calls: 252 shell calls (its own wrapper rpc.ps1 around bench-rpc.ps1, plus reads and appends of its own journal) and 2 file writes (rpc.ps1, journal.md); 0 paths outside the arena; 0 memory references, memory_paths null; 0 calls to set/add/load; every API response names claude-fable-5-2; best hand recomputed from chip deltas in the log equals the game-over screen (1,196,167).",
+  "kept_outside_repo": "C:/Users/maaro/BenchArenas/fable52__solo__noseed: run-log.jsonl (1.8 MB), canary.txt, .claude/settings.local.json"
+}
